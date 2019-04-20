@@ -5,7 +5,6 @@ of the project files is based off of the asteroid game demo.
 """
 import pygame
 
-
 class PygameGame(object):
 
     def init(self):
@@ -40,7 +39,7 @@ class PygameGame(object):
         return self._keys.get(key, False)
 
     def __init__(self, width=600, height=400, fps=50, title="Musaic"):
-        self.bgColor = (0, 0, 0)
+        self.bgColor = (255, 255, 255)
         self.width = width
         self.height = height
         self.fps = fps
@@ -58,7 +57,7 @@ class PygameGame(object):
         self._keys = dict()
 
         # call game-specific initialization
-        self.init()
+        self.init() # In Musaic.py
 
         playing = True
         while playing:
