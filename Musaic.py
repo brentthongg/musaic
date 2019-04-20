@@ -16,6 +16,7 @@ class Game(PygameGame):
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
 
     def init(self):
+        self.background = pygame.image.load("backgroundForest.png")
         Game.setWoofgang(self)
 
     # Keyboard Functions:
@@ -42,6 +43,7 @@ class Game(PygameGame):
     # View:
 
     def redrawAll(self, screen):
+        screen.blit(self.background, (0, 0))
         self.woofgang.draw(screen)
 
-Game(1200, 800).run()
+Game(1024, 1024).run()
