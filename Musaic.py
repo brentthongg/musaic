@@ -38,7 +38,7 @@ class Game(PygameGame):
 
     def timerFired(self, dt): 
         woof = self.woofgang.sprites()[0]
-        woof.update(self.isKeyPressed, self.width, self.height)
+        woof.update(self.isKeyPressed, self.width, self.height, dt)
 
     # View:
 
