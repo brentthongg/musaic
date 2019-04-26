@@ -10,3 +10,4 @@ class GameObject(pygame.sprite.Sprite):
 
     def update(self, screenWidth, screenHeight, dx = 0, dy = 0):
         self.x += dx
+        self.y -= dy
