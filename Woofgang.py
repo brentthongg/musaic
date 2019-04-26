@@ -19,7 +19,7 @@ class Woofgang(GameObject):
         for file in tempList:
             Woofgang.jumpFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_jumping/%s" % file), (135, 120)))
 
-        Woofgang.gravity = 1
+        Woofgang.gravity = 1.5
 
     def __init__(self, x, y):
         super(Woofgang, self).__init__(x, y, Woofgang.runFrame[0])
@@ -62,5 +62,5 @@ class Woofgang(GameObject):
         super(Woofgang, self).update(screenWidth, screenHeight, dx, self.dy)
 
     def onGround(self, groundY):
-        return self.y + self.h >= groundY
+        return (self.y + (self.h / 2)) >= groundY
 

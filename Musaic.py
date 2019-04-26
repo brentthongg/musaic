@@ -46,4 +46,4 @@ class Game(PygameGame):
         screen.blit(self.background, (0, 0))
         self.woofgang.draw(screen)
 
-Game(1024, 1024).run()
+Game(1024, 800).run()
