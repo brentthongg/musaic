@@ -9,6 +9,3 @@ class Platform(GameObject):
 
     def __init__(self, x, y):
         super(Platform, self).__init__(x, y, Platform.image)
-
-    def update():
-        pass
