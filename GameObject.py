@@ -11,3 +11,10 @@ class GameObject(pygame.sprite.Sprite):
     def update(self, screenWidth, screenHeight, dx = 0, dy = 0):
         self.x += dx
         self.y -= dy
+
+        """ WRAP AROUND FEATURE 
+        if self.x - (self.w / 2) > screenWidth:
+            self.x = -(self.w // 2)
+        elif self.x + (self.w / 2) < 0:
+            self.x = screenWidth + (self.w // 2)
+        """
