@@ -39,10 +39,13 @@ class Woofgang(GameObject):
         self.isFlipped = False
         self.isJumping = False
         self.isRunning = False
+        self.isBattling = False
         self.dy = 0
+
 
     def update(self, keysDown, screenWidth, screenHeight, delta):
         dx = 0
+
         if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
             self.frames = Woofgang.runFrame
             Woofgang.frameNumber = 0
