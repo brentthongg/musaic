@@ -5,6 +5,9 @@ from GameObject import GameObject
 class mainMenu(PygameGame):
     def init(self):
         self.background = pygame.image.load("imgs/mainMenuBG.png")
+        pygame.mixer.init()
+        self.music = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
+        pygame.mixer.music.play(100,0)
         #dimensions of UI buttons
         self.startDims = (60,145,327,356) #(0:x1, 1:x2, 2:y1, 3:y2)
         self.configDims = (60,284,375,407)
@@ -54,7 +57,7 @@ class mainMenu(PygameGame):
 
     # View:
     def redrawAll(self,screen):
-        screen.blit(self.background, (0, 0))
+        screen.blit(self.background,(0,0))
         self.background = pygame.transform.scale(self.background, (600,600)).convert_alpha()
 
 
