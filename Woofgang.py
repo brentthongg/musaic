@@ -44,13 +44,10 @@ class Woofgang(GameObject):
         self.isFlipped = False
         self.isJumping = False
         self.isRunning = False
-<<<<<<< HEAD
         self.isBattling = False
-=======
         self.isAttacked = False
         self.health = 100
         self.level = 1
->>>>>>> 2c88d3dd7a85604e3367da07016e0b65f1a52ae3
         self.dy = 0
         self.keysHeld = 0
 

@@ -9,9 +9,8 @@ def playNote(note):
 	noteKey = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 	noteName = noteKey[note]
 	song = "monsterNotes/" + noteName + ".aiff"
-	p= vlc.MediaPlayer(song)
+	p = vlc.MediaPlayer(song)
 	p.play()
-	print("Done!")
 
 #all parameters should be indicies into the noteList
 #noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -49,8 +48,8 @@ def hztoNote(hz):
         h = int(12*math.log2(hz/C0))
         octave = h//12
         n = h%12
-        return (noteList[n]+str(octave), n)
-    return ""
+        return n
+    return None
 
 '''
 p = pyaudio.PyAudio()
@@ -95,27 +94,14 @@ def record():
     pitch_o = aubio.pitch("default", win_s, hop_s, samplerate)
     pitch_o.set_unit("Hz")
     pitch_o.set_tolerance(tolerance)
-    print("*** starting recording")
     audiobuffer = stream.read(buffer_size)
     signal = np.fromstring(audiobuffer, dtype=np.float32)
 
     pitch = pitch_o(signal)[0]
     confidence = pitch_o.get_confidence()
-
-    note = hztoNote(pitch)
-    if(len(note) == 0):
-        return None
-    '''
-    if(len(note)>0):
-        print(checkInterval(3, 5, note[1]))
-    '''
-    print("*** done recording")
-    return note
     stream.stop_stream()
     stream.close()
     p.terminate()
-
-
-record()
+    return hztoNote(pitch)
 
 

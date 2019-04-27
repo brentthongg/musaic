@@ -9,6 +9,7 @@ class Monster(GameObject):
         super(Monster, self).__init__(x, y, startFrame)
         self.x = x
         self.y = y
+        self.dx, self.dy = 0, 0
         self.startingNote = startingNote
         self.startingInterval = startingInterval
         self.isBattling = False
@@ -17,30 +18,30 @@ class Monster(GameObject):
 
     def move(self, player):
         if(self.x < player.x):
-            self.x += 10
+            self.dx = 10
         else:
-            self.x -= 10
+            self.dx = -10
 
     def checkInterval(self, noteSung):
         noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
+        if noteSung == None: return False
         if(noteList[(self.startingNote + self.startingInterval)%12] == noteList[noteSung]):
             return True
         return False
 
     def update(self, player, screenWidth, screenHeight):
-        if collide_rect(self, player): 
+        if pygame.sprite.collide_rect(self, player): 
             player.isAttacked = True
             self.isBattling = True
             self.x = self.baseX
             self.y = self.baseY
         elif(abs(player.x - self.x) <= screenWidth//15):
-            move(self, player)
+            Monster.move(self, player)
             player.isBattling = True
         else:
             player.isBattling = False
             self.x = self.baseX
             self.y = self.baseY
 
-
-
+        super(Monster, self).update(screenWidth, screenHeight, self.dx)
 

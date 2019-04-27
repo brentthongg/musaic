@@ -1,4 +1,3 @@
-if 1: print("Hi")
 import pyaudio
 import sys
 import aubio

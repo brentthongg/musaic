@@ -24,7 +24,7 @@ class Slime(Monster):
     def __init__(self, x, y, startingInterval):
         self.baseX = x
         self.baseY = y
-        startingNote = random.randint([0, 11])
+        startingNote = random.randint(0, 11)
         super(Slime, self).__init__(x, y, startingNote, startingInterval, Slime.idleFrame[0])
 
 
@@ -49,5 +49,7 @@ class Snake(Monster):
     def __init__(self, x, y, startingInterval):
         self.baseX = x
         self.baseY = y
-        startingNote = random.randint([0, 11])
+        startingNote = random.randint(0, 11)
         super(Snake, self).__init__(x, y, startingNote, startingInterval, Snake.idleFrame[0])
+
+
