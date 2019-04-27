@@ -9,16 +9,21 @@ import pitchCode
 class Game(PygameGame):
 
     def setWoofgang(self):
-        startX = 600
+        startX = 100
         startY = 600
 
         Woofgang.init()
         woofgangSprite = Woofgang(startX, startY)
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
 
+<<<<<<< HEAD
         self.monsters = pygame.sprite.Group()
 
         Level.addMonsters(self.monsters)
+=======
+    def setMonster(self):
+        pass
+>>>>>>> 2c88d3dd7a85604e3367da07016e0b65f1a52ae3
 
     def init(self):
         self.background = pygame.image.load("imgs/backgroundForest.png")

@@ -1,15 +1,15 @@
+if 1: print("Hi")
 import pyaudio
 import sys
 import aubio
 import numpy as np
 import math
 
-
 def hztoNote(hz):
     A4 = 440
     C0 = int(A4*math.pow(2, -4.75))
     noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
-    if(hz != 0):   
+    if(hz != 0):
         h = int(12*math.log2(hz/C0))
         octave = h//12
         n = h%12
