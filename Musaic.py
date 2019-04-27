@@ -8,12 +8,15 @@ from Woofgang import Woofgang
 class Game(PygameGame):
 
     def setWoofgang(self):
-        startX = 600
+        startX = 100
         startY = 600
 
         Woofgang.init()
         woofgangSprite = Woofgang(startX, startY)
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
+
+    def setMonster(self):
+        pass
 
     def init(self):
         self.background = pygame.image.load("backgroundForest.png")
