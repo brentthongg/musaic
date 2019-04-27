@@ -19,7 +19,7 @@ class Game(PygameGame):
         pass
 
     def init(self):
-        self.background = pygame.image.load("backgroundForest.png")
+        self.background = pygame.image.load("imgs/backgroundForest.png")
         Game.setWoofgang(self)
 
     # Keyboard Functions:
