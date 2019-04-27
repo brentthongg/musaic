@@ -11,6 +11,7 @@ class Monster(GameObject):
         self.y = y
         self.startingNote = startingNote
         self.startingInterval = startingInterval
+        self.isBattling = False
         self.frames = []
         
 
@@ -27,12 +28,19 @@ class Monster(GameObject):
         return False
 
     def update(self, player, screenWidth, screenHeight):
-        if(abs(player.x - self.x) <= 1):
+        if collide_rect(self, player): 
             player.isAttacked = True
+            self.isBattling = True
             self.x = self.baseX
             self.y = self.baseY
         elif(abs(player.x - self.x) <= screenWidth//15):
             move(self, player)
+            player.isBattling = True
+        else:
+            player.isBattling = False
+            self.x = self.baseX
+            self.y = self.baseY
+
 
 
 

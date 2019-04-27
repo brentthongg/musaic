@@ -4,6 +4,7 @@ import pygame
 from starter import PygameGame
 from GameObject import GameObject
 from Woofgang import Woofgang
+from AllMonsters import Snake
 import pitchCode 
 
 class Game(PygameGame):
@@ -16,18 +17,17 @@ class Game(PygameGame):
         woofgangSprite = Woofgang(startX, startY)
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
 
-<<<<<<< HEAD
-        self.monsters = pygame.sprite.Group()
+        #Level.addMonsters(self.monsters)
 
-        Level.addMonsters(self.monsters)
-=======
     def setMonster(self):
+        testMonster = Snake(600, 600, 2)
+        self.monsters = pygame.sprite.GroupSingle(testMonster)
         pass
->>>>>>> 2c88d3dd7a85604e3367da07016e0b65f1a52ae3
 
     def init(self):
         self.background = pygame.image.load("imgs/backgroundForest.png")
         Game.setWoofgang(self)
+        Game.setMonster(self)
 
     # Keyboard Functions:
     def keyPressed(self, code, mod): pass
@@ -49,11 +49,12 @@ class Game(PygameGame):
     def timerFired(self, dt): 
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt)
+        self.monsters.update()
         if(woof.isBattling):
             sungNote = pitchCode.record()
             for monster in self.monsters.sprites():
                 if monster.isBattling:
-                    monster.check(sungNote)
+                    monster.checkInterval(sungNote)
     # View:
 
     def redrawAll(self, screen):

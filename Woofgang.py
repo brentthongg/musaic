@@ -57,14 +57,11 @@ class Woofgang(GameObject):
 
     def update(self, keysDown, screenWidth, screenHeight, delta):
         dx = 0
-<<<<<<< HEAD
 
         if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
             self.frames = Woofgang.runFrame
             Woofgang.frameNumber = 0
             self.isRunning = True
-=======
->>>>>>> 2c88d3dd7a85604e3367da07016e0b65f1a52ae3
 
         if self.isAttacked:
             self.health -= 10
