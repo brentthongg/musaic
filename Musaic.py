@@ -53,16 +53,43 @@ class Game(PygameGame):
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt)
         self.monsters.update(woof, self.width, self.height)
-        #print("Woof Loc:", woof.x, woof.y)
         if(woof.isBattling):
-            sungNote = pitchCode.record()
-            #print(sungNote)
             for monster in self.monsters.sprites():
-                #print("Monster Loc:", monster.x, monster.y)
-                if monster.isBattling:
+                if(monster.isBattling):
+                    #pitchCode.playNote(monster.startingNote)
+                    print(monster.startingNote)
+                    while(monster.isBattling and woof.isBattling):
+                        woof = self.woofgang.sprites()[0]
+                        woof.update(self.isKeyPressed, self.width, self.height, dt)
+                        self.monsters.update(woof, self.width, self.height)
+                        #sungNote = pitchCode.record()
+                        #if(monster.checkInterval(sungNote)):
+                            #monster.kill()
+                            #break
+
+        '''
+        for monster in self.monsters.sprites():
+            print(monster.x, monster.y)
+            monster.move(woof, self.width, self.height)
+        '''
+            
+        '''
+        if(woof.isBattling):
+            print("woof battling!")
+            for monster in self.monsters.sprites():
+                if(monster.isBattling):
                     pitchCode.playNote(monster.startingNote)
+                while monster.isBattling and woof.isBattling:
+                    print(woof.health)
+                    sungNote = pitchCode.record()
+                    #print(sungNote)
+                    monster.update(woof, self.width, self.height)
+                    woof.update(self.isKeyPressed, self.width, self.height, dt)
                     if monster.checkInterval(sungNote):
                       monster.kill()
+                      break
+        '''
+
     # View:
 
     def redrawAll(self, screen):

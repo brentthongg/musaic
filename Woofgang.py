@@ -46,11 +46,14 @@ class Woofgang(GameObject):
         self.isRunning = False
         self.isBattling = False
         self.isAttacked = False
+        self.isDying = False
         self.health = 100
         self.level = 1
         self.dy = 0
         self.keysHeld = 0
-
+        
+    def getsAttacked(self):
+        self.health -= 10
 
     def update(self, keysDown, screenWidth, screenHeight, delta):
         dx = 0
@@ -61,57 +64,60 @@ class Woofgang(GameObject):
             self.isRunning = True
 
         if self.isAttacked:
-            self.health -= 10
             self.frames = Woofgang.dieFrame
             Woofgang.frameNumber = 0
+            self.isAttacked = False
+            self.isDying = True
+
+        #if(not self.isBattling):
+        if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
+            self.frames = Woofgang.runFrame
+            Woofgang.frameNumber = 0
+            self.isRunning = True
+
+        elif not (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and self.isRunning:
+            self.frames = Woofgang.idleFrame
+            Woofgang.frameNumber = 0
             self.isRunning = False
-            self.isAttacked = not self.isAttacked
 
-        if(not self.isBattling):
-          if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
-              self.frames = Woofgang.runFrame
-              Woofgang.frameNumber = 0
-              self.isRunning = True
+        if keysDown(pygame.K_RIGHT) and self.isRunning:
+            Woofgang.frameNumber += 1
+            dx = 15
+            self.goingRight = True
 
-          elif not (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and self.isRunning:
-              self.frames = Woofgang.idleFrame
-              Woofgang.frameNumber = 0
-              self.isRunning = False
+        elif keysDown(pygame.K_LEFT) and self.isRunning:
+            Woofgang.frameNumber += 1
+            dx = -15
+            self.goingRight = False
 
-          if keysDown(pygame.K_RIGHT) and self.isRunning:
-              Woofgang.frameNumber += 1
-              dx = 15
-              self.goingRight = True
+        if keysDown(pygame.K_SPACE) and not self.isJumping:
+            self.isJumping = True
+            self.frames = Woofgang.jumpFrame
+            Woofgang.frameNumber = 0
+            self.dy = 15
 
-          elif keysDown(pygame.K_LEFT) and self.isRunning:
-              Woofgang.frameNumber += 1
-              dx = -15
-              self.goingRight = False
+        elif self.isJumping and self.onGround(600 + (self.h / 2)):
+            self.isJumping = False
+            self.isRunning = False
+            self.frames = Woofgang.idleFrame
+            self.dy = 0
 
-          if keysDown(pygame.K_SPACE) and not self.isJumping:
-              self.isJumping = True
-              self.frames = Woofgang.jumpFrame
-              Woofgang.frameNumber = 0
-              self.dy = 15
+        elif self.isJumping:
+            Woofgang.frameNumber += 1
+            self.dy -= self.gravity
+            if self.dy < 0:
+                self.frames = Woofgang.fallFrame
+                Woofgang.frameNumber = 0
 
-          elif self.isJumping and self.onGround(600 + (self.h / 2)):
-              self.isJumping = False
-              self.isRunning = False
-              self.frames = Woofgang.idleFrame
-              self.dy = 0
+        if not self.isRunning and not self.isJumping:
+            Woofgang.frameNumber += 1
 
-          elif self.isJumping:
-              Woofgang.frameNumber += 1
-              self.dy -= self.gravity
-              if self.dy < 0:
-                  self.frames = Woofgang.fallFrame
-                  Woofgang.frameNumber = 0
-
-          if not self.isRunning and not self.isJumping:
-              Woofgang.frameNumber += 1
-
-          if Woofgang.frameNumber >= len(self.frames):
-              Woofgang.frameNumber = 0
+        if Woofgang.frameNumber >= len(self.frames):
+            if(self.isDying):
+                self.isDying = False
+                self.frames = Woofgang.idleFrame
+                dx = -screenWidth//4
+            Woofgang.frameNumber = 0
 
         self.image = self.frames[Woofgang.frameNumber]
         if not self.goingRight:
