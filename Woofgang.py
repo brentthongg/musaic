@@ -67,7 +67,7 @@ class Woofgang(GameObject):
             self.isRunning = False
             self.isAttacked = not self.isAttacked
 
-        if(not self.isAttacked):
+        if(not self.isBattling):
           if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
               self.frames = Woofgang.runFrame
               Woofgang.frameNumber = 0

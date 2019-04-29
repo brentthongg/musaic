@@ -18,9 +18,9 @@ class Monster(GameObject):
 
     def move(self, player):
         if(self.x < player.x):
-            self.dx = 10
+            self.dx = 100
         else:
-            self.dx = -10
+            self.dx = -100
 
     def checkInterval(self, noteSung):
         noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
@@ -35,13 +35,14 @@ class Monster(GameObject):
             self.isBattling = True
             self.x = self.baseX
             self.y = self.baseY
-        elif(abs(player.x - self.x) <= screenWidth//15):
+            self.dx = 0
+        elif(abs(self.x-player.x) <= screenWidth//5):
             Monster.move(self, player)
             player.isBattling = True
         else:
             player.isBattling = False
             self.x = self.baseX
             self.y = self.baseY
+            self.dx = 0
 
         super(Monster, self).update(screenWidth, screenHeight, self.dx)
-

@@ -53,12 +53,14 @@ class Game(PygameGame):
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt)
         self.monsters.update(woof, self.width, self.height)
+        #print("Woof Loc:", woof.x, woof.y)
         if(woof.isBattling):
             sungNote = pitchCode.record()
-            print(sungNote)
+            #print(sungNote)
             for monster in self.monsters.sprites():
-                pitchCode.playNote(monster.startingNote)
+                #print("Monster Loc:", monster.x, monster.y)
                 if monster.isBattling:
+                    pitchCode.playNote(monster.startingNote)
                     if monster.checkInterval(sungNote):
                       monster.kill()
     # View:
