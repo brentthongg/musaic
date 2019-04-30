@@ -1,0 +1,106 @@
+#threading example in animation framework
+#written hastily by Tara Stentz
+
+#Change this variable to turn threading on and off. 
+#Watch what happens when you press a key in both situations!
+THREADING_ON = True
+
+if(THREADING_ON):
+    import threading
+
+#this function runs for a really long time, if we call it without threading
+#the animation will stop
+def longFunction(data):
+    total = 0
+    for i in range(100000000):
+        total += i
+    data.answer = total
+    return total
+
+# Updated Animation Starter Code
+
+from tkinter import *
+
+####################################
+# customize these functions
+####################################
+
+def init(data):
+    # load data.xyz as appropriate
+    data.x = data.width//2
+    data.y = data.height//2
+    data.answer = None
+    if(THREADING_ON):
+        data.thread = threading.Thread(target=longFunction, args=(data,))
+
+def mousePressed(event, data):
+    # use event.x and event.y
+    pass
+
+def keyPressed(event, data):
+    # use event.char and event.keysym
+    
+    if(THREADING_ON):
+        data.thread.start()
+    else:
+        longFunction(data)
+
+
+def timerFired(data):
+    data.x = (data.x + 10) % data.width
+
+def redrawAll(canvas, data):
+    # draw in canvas
+    size = 20
+    canvas.create_rectangle(data.x - size, data.y - size, 
+        data.x + size, data.y + size, fill='blue')
+    if(data.answer != None):
+        canvas.create_text(data.width//2,20, text=str(data.answer))
+
+####################################
+# use the run function as-is
+####################################
+
+def run(width=300, height=300):
+    def redrawAllWrapper(canvas, data):
+        canvas.delete(ALL)
+        canvas.create_rectangle(0, 0, data.width, data.height,
+                                fill='white', width=0)
+        redrawAll(canvas, data)
+        canvas.update()    
+
+    def mousePressedWrapper(event, canvas, data):
+        mousePressed(event, data)
+        redrawAllWrapper(canvas, data)
+
+    def keyPressedWrapper(event, canvas, data):
+        keyPressed(event, data)
+        redrawAllWrapper(canvas, data)
+
+    def timerFiredWrapper(canvas, data):
+        timerFired(data)
+        redrawAllWrapper(canvas, data)
+        # pause, then call timerFired again
+        canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
+    # Set up data and call init
+    class Struct(object): pass
+    data = Struct()
+    data.width = width
+    data.height = height
+    data.timerDelay = 100 # milliseconds
+    root = Tk()
+    init(data)
+    # create the root and the canvas
+    canvas = Canvas(root, width=data.width, height=data.height)
+    canvas.pack()
+    # set up events
+    root.bind("<Button-1>", lambda event:
+                            mousePressedWrapper(event, canvas, data))
+    root.bind("<Key>", lambda event:
+                            keyPressedWrapper(event, canvas, data))
+    timerFiredWrapper(canvas, data)
+    # and launch the app
+    root.mainloop()  # blocks until window is closed
+    print("bye!")
+
+run(500, 500)

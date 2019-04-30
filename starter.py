@@ -59,8 +59,10 @@ class PygameGame(object):
         # call game-specific initialization
         self.init() # In Musaic.py
 
+
         playing = True
         while playing:
+
             time = clock.tick(self.fps)
             self.timerFired(time)
             for event in pygame.event.get():
@@ -85,7 +87,6 @@ class PygameGame(object):
             screen.fill(self.bgColor)
             self.redrawAll(screen)
             pygame.display.flip()
-
         pygame.quit()
 
 

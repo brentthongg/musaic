@@ -11,6 +11,7 @@ def playNote(note):
 	song = "monsterNotes/" + noteName + ".aiff"
 	p = vlc.MediaPlayer(song)
 	p.play()
+    
 
 #all parameters should be indicies into the noteList
 #noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -99,10 +100,9 @@ def record():
 
     pitch = pitch_o(signal)[0]
     confidence = pitch_o.get_confidence()
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+    #stream.stop_stream()
+    #stream.close()
+    #p.terminate()
+    print(hztoNote(pitch))
     return hztoNote(pitch)
-
-
 

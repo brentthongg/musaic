@@ -49,14 +49,16 @@ class Woofgang(GameObject):
         self.isDying = False
         self.health = 100
         self.level = 1
-        self.dy = 0
+        #self.dy = 0
         self.keysHeld = 0
+        self.gravity = 5
         
     def getsAttacked(self):
         self.health -= 10
 
     def update(self, keysDown, screenWidth, screenHeight, delta):
         dx = 0
+        dy = 0
 
         if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
             self.frames = Woofgang.runFrame
@@ -94,18 +96,18 @@ class Woofgang(GameObject):
             self.isJumping = True
             self.frames = Woofgang.jumpFrame
             Woofgang.frameNumber = 0
-            self.dy = 15
+            dy = 15
 
         elif self.isJumping and self.onGround(600 + (self.h / 2)):
             self.isJumping = False
             self.isRunning = False
             self.frames = Woofgang.idleFrame
-            self.dy = 0
+            dy = 0
 
         elif self.isJumping:
             Woofgang.frameNumber += 1
-            self.dy -= self.gravity
-            if self.dy < 0:
+            dy -= self.gravity
+            if dy < 0:
                 self.frames = Woofgang.fallFrame
                 Woofgang.frameNumber = 0
 
@@ -123,7 +125,7 @@ class Woofgang(GameObject):
         if not self.goingRight:
             self.image = pygame.transform.flip(self.image, True, False)
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
-        super(Woofgang, self).update(screenWidth, screenHeight, dx, self.dy)
+        super(Woofgang, self).update(screenWidth, screenHeight, dx, dy)
 
     def onGround(self, groundY):
         return (self.y + (self.h / 2)) >= groundY
