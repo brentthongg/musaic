@@ -32,7 +32,6 @@ class mainMenu(PygameGame):
     		self.startDims[2] <= thisY <= self.startDims[3]):
     		self.startPressed = True
     		#Start Game Here
-    		pass
     	elif (self.configDims[0]<=thisX <= self.configDims[1] and 
     		self.configDims[2] <= thisY <= self.configDims[3]):
     		#Config Screen TBM
@@ -46,7 +45,6 @@ class mainMenu(PygameGame):
     	elif (self.quitDims[0]<=thisX <= self.quitDims[1] and 
     		self.quitDims[2] <= thisY <= self.quitDims[3]):
     		self.quitPressed = True
-    		pygame.quit()
     	else: pass
 
     def mouseReleased(self, x, y): pass
@@ -59,6 +57,15 @@ class mainMenu(PygameGame):
     def redrawAll(self,screen):
         screen.blit(self.background,(0,0))
         self.background = pygame.transform.scale(self.background, (600,600)).convert_alpha()
+        if (self.startPressed):
+        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,327),(60,356),(145,356),(145,327)],3)
+        if (self.configPressed):
+        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,407),(60,375),(290,375),(290,407)],3)
+        if (self.infoPressed):
+        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,447),(60,418),(130,418),(130,447)],3)
+        if (self.quitPressed):
+        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,460),(60,495),(136,460),(136,495)],3)
+        	pygame.quit()
 
 
 
