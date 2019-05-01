@@ -1,7 +1,7 @@
 import pygame
 import random
 from GameObject import GameObject
-from Monster import Monster
+from Monster import *
 
 class Slime(Monster):
 

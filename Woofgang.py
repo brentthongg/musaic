@@ -56,9 +56,21 @@ class Woofgang(GameObject):
         self.dy = 0
         self.onPlat = False
         self.currPlat = None
+        self.numBones = 0
+        self.currBone = 0
         
     def getsAttacked(self):
         self.health -= 1
+
+    def collideBones(self, bones, collectedBones, filledBone):
+        collided = pygame.sprite.spritecollide(self, bones, False)      
+        for bone in collided:
+            self.numBones += 1
+            bone.kill() 
+            collectedBones[self.currBone] = filledBone
+            self.currBone += 1
+
+    '''
 
     def collidePlat(self, blocks):
         collided = pygame.sprite.spritecollide(self, blocks, False)
@@ -75,8 +87,8 @@ class Woofgang(GameObject):
             (self.x+self.w)) > (self.currPlat.x + self.currPlat.w)):
             self.isJumping = True
             self.onPlat = False
+    '''
             
-
 
     def update(self, keysDown, screenWidth, screenHeight, delta, blocks):
         dx = 0
@@ -116,7 +128,7 @@ class Woofgang(GameObject):
             Woofgang.frameNumber = 0
             self.dy = -15
 
-        elif self.isJumping and self.onGround(600 + (self.h / 2)):
+        elif self.isJumping and self.onGround(blocks):
             self.isJumping = False
             self.isRunning = False
             self.frames = Woofgang.idleFrame
@@ -129,6 +141,11 @@ class Woofgang(GameObject):
             if self.dy < 0:
                 self.frames = Woofgang.fallFrame
                 Woofgang.frameNumber = 0
+
+        elif not(self.onGround(blocks)):
+            Woofgang.frameNumber += 1
+            self.dy += self.gravity
+        else: self.dy = 0
 
 
 
@@ -145,7 +162,7 @@ class Woofgang(GameObject):
 
         self.dx = dx
 
-        self.collidePlat(blocks)
+        #self.collidePlat(blocks)
 
         self.image = self.frames[Woofgang.frameNumber]
         if not self.goingRight:
@@ -153,6 +170,13 @@ class Woofgang(GameObject):
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
         super(Woofgang, self).update(screenWidth, screenHeight, self.dx, self.dy)
 
-    def onGround(self, groundY):
-        return (self.y + (self.h / 2)) >= groundY
+    def inBlockBounds(self, platform):
+        return (((self.x + self.w) > platform.x + platform.w) and (self.x < platform.x))
+
+    def onGround(self, blocks):
+        for platform in blocks:
+            if self.inBlockBounds(platform):
+                if ((self.y + self.h) >= platform.y) and (self.y < platform.y):
+                    return True
+        return False
 

@@ -3,33 +3,25 @@ import Platform
 
 class Level(object):
 
-	@staticmethod
-	def init():
-		Platform.Plat.init()
-		pass
+    def __init__(self, level):
+	    self.rows = 12
+	    self.cols = 64
+	    if level == 1:
+	        self.generateLevelOne()
+	    else:
+	        self.generateLevelOne()
 
-	def __init__(self, numPlats):
-		self.rows = 10
-		self.cols = 64
-		self.numPlats = numPlats
-		self.Plats = []
-		#self.map = createMap(self)
-		self.numPlats = 3
-		self.Plats = []
-		self.createPlatforms()
-		#Level.createPlatforms(self)
+    def createMap(self):
+        tempMap = [[0] * self.cols for i in range(self.rows)]
+        return tempMap
 
-	def createMap(self):
-		tempMap = [[0] * self.cols for i in range(self.rows)]
-		return tempMap
+    def generateFloor(newMap):
+        for i in range(1, 3):
+            newMap[-1 * i] = [1] * len(newMap[0])
 
-	#def fillMap(self):
-		#for i in range(self.numPlats):
-			#randRow = 
-			#tempMap[]
-
-
-	def createPlatforms(self):
-		for i in range(self.numPlats):
-			new = Platform.Plat()
-			self.Plats.append(new)
+    def generateLevelOne(self):
+        #Create empty map and floor
+        self.currMap = self.createMap()
+        Level.generateFloor(self.currMap)
+        self.currMap[9][12:17] = [1, 1, 1, 1, 1]
+        print(self.currMap[-4:])

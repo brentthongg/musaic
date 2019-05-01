@@ -2,14 +2,16 @@ import pygame
 import random
 from GameObject import GameObject
 
-class Plat(GameObject):
+class Platform(GameObject):
 
     @staticmethod
     def init():
-    	Plat.platImage = pygame.image.load("imgs/plat.png")
+        Platform.platImage = pygame.transform.scale(pygame.image.load("imgs/plat.png"), (64, 64))
 
-    def __init__(self):
-    	self.x, self.y = random.randint(300, 1000), random.randint(570, 600)
-    	super(Plat, self).__init__(self.x, self.y, self.platImage)
-    	self.len = random.randint(0, 3)
+
+    def __init__(self, r, c, screenWidth, screenHeight, numRows, numCols):
+        self.row, self.col = r, c
+        x = (screenWidth / numCols) * c
+        y = (screenHeight / numRows) * r
+        super(Platform, self).__init__(x, y, Platform.platImage)
 
