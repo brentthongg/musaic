@@ -11,6 +11,9 @@ import pyaudio
 import numpy as np
 from Platform import Plat
 import levels
+import levelScreen
+import mainMenu
+import story
 
 
 class Game(PygameGame):
