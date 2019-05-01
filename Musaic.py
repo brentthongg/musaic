@@ -76,11 +76,14 @@ class Game(PygameGame):
 
         for monster in self.monsters:
             monster.x += shiftX
+            monster.rect = pygame.Rect(monster.x, monster.y, monster.w, monster.h)
 
         for plat in self.platGroup:
-            plat.rect.x += shiftX
+            plat.x += shiftX
+            plat.rect = pygame.Rect(plat.x, plat.y, plat.w, plat.h)
 
         for treat in self.bone:
+            treat.x += shiftX
             treat.rect.x += shiftX
 
     def checkWoofMove(self):
