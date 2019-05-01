@@ -19,6 +19,7 @@ class Monster(GameObject):
                 subImage = image.subsurface(
                     (col * cellWidth, row * cellHeight, cellWidth, cellHeight))
                 Monster.notePicList.append(subImage)
+        Monster.boneImage = pygame.image.load("imgs/bone.png")
 
     def __init__(self, x, y, startingNote, startingInterval, startFrame):
         super(Monster, self).__init__(x, y, startFrame)
@@ -52,27 +53,35 @@ class Monster(GameObject):
         self.dx = 0
 
         if(abs(self.x - player.x) <= screenWidth//4):
-            if(self.x < (self.baseX - screenWidth//6) or self.x > (self.baseX + screenWidth//6)):
-                self.x = self.baseX
-            else:
-                player.isBattling = True
-                self.isBattling = True
-                self.move(player, screenWidth, screenHeight)
+            player.isBattling = True
+            self.isBattling = True
+            self.move(player, screenWidth, screenHeight)
 
         elif(abs(self.x - player.x) > screenWidth//4):
             player.isBattling = False
             self.isBattling = False
             self.notePlayed = False
-            self.x = self.baseX
+            #self.x = self.baseX
             self.dx = 0
 
         if pygame.sprite.collide_rect(self, player):
             player.isAttacked = True
             player.isBattling = False
             self.isBattling = False
-            self.x = self.baseX
+            #self.x = self.baseX
             self.dx = 0
             player.getsAttacked()
 
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         super(Monster, self).update(screenWidth, screenHeight, self.dx, 0)
+
+class Bone(GameObject):
+
+    @staticmethod
+    def init():
+        Bone.boneImage = pygame.image.load("imgs/bone.png")
+
+    def __init__(self, x, y):
+        super(Bone, self).__init__(x, y, self.boneImage)
+        self.dropped = False
+
