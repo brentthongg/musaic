@@ -3,7 +3,7 @@ from starter import PygameGame
 from GameObject import GameObject
 
 class mainMenu(PygameGame):
-    def init(self):
+    def mainMenu_init(self):
         self.background = pygame.image.load("imgs/mainMenuBG.png")
         pygame.mixer.init()
         self.music = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
@@ -25,7 +25,7 @@ class mainMenu(PygameGame):
 
     # Mouse Functions:
 
-    def mousePressed(self, x, y):
+    def mainMenu_mousePressed(self, x, y):
     	(thisX,thisY) = pygame.mouse.get_pos()
     	#if user presses "start"
     	if (self.startDims[0]<=thisX <= self.startDims[1] and
@@ -54,7 +54,7 @@ class mainMenu(PygameGame):
     def mouseDrag(self, x, y): pass
 
     # View:
-    def redrawAll(self,screen):
+    def mainMenu_redrawAll(self,screen):
         screen.blit(self.background,(0,0))
         self.background = pygame.transform.scale(self.background, (600,600)).convert_alpha()
         if (self.startPressed):
@@ -66,4 +66,3 @@ class mainMenu(PygameGame):
         if (self.quitPressed):
         	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,460),(60,495),(136,460),(136,495)],3)
         	pygame.quit()
-
