@@ -19,9 +19,9 @@ class mainMenu(PygameGame):
         self.quitPressed = False
 
     # Keyboard Functions:
-    def keyPressed(self, code, mod): pass
+    def mainMenu_keyPressed(self, code, mod): pass
 
-    def keyReleased(self, code, mod): pass
+    def mainMenu_keyReleased(self, code, mod): pass
 
     # Mouse Functions:
 
@@ -47,11 +47,11 @@ class mainMenu(PygameGame):
     		self.quitPressed = True
     	else: pass
 
-    def mouseReleased(self, x, y): pass
+    def mainMenu_mouseReleased(self, x, y): pass
 
-    def mouseMotion(self, x, y): pass
+    def mainMenu_mouseMotion(self, x, y): pass
 
-    def mouseDrag(self, x, y): pass
+    def mainMenu_mouseDrag(self, x, y): pass
 
     # View:
     def mainMenu_redrawAll(self,screen):
