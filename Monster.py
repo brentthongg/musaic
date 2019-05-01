@@ -1,10 +1,25 @@
 import pygame
 import random
 from GameObject import GameObject
+import pitchCode
 
 #startingNote = index into the list
 
 class Monster(GameObject):
+
+    @staticmethod
+    def init():
+        image = pygame.image.load("imgs/notes.png")
+        rows, cols = 3, 4
+        width, height = image.get_size()
+        cellWidth, cellHeight = width / cols, height / rows
+        Monster.notePicList = []
+        for row in range(rows):
+            for col in range(cols):
+                subImage = image.subsurface(
+                    (col * cellWidth, row * cellHeight, cellWidth, cellHeight))
+                Monster.notePicList.append(subImage)
+
     def __init__(self, x, y, startingNote, startingInterval, startFrame):
         super(Monster, self).__init__(x, y, startFrame)
         self.x = x
@@ -16,6 +31,8 @@ class Monster(GameObject):
         self.startingInterval = startingInterval
         self.isBattling = False
         self.frames = []
+        self.notePic = Monster.notePicList[self.startingNote]
+        self.notePlayed = False
         
 
     def move(self, player, screenWidth, screenHeight):
@@ -27,7 +44,7 @@ class Monster(GameObject):
     def checkInterval(self, noteSung):
         noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]
         if noteSung == None: return False
-        if(noteList[(self.startingNote + self.startingInterval)%12] == noteList[noteSung]):
+        elif pitchCode.checkInterval(self.startingInterval, self.startingNote, noteSung):
             return True
         return False
 
@@ -45,7 +62,9 @@ class Monster(GameObject):
         elif(abs(self.x - player.x) > screenWidth//4):
             player.isBattling = False
             self.isBattling = False
+            self.notePlayed = False
             self.x = self.baseX
+            self.dx = 0
 
         if pygame.sprite.collide_rect(self, player):
             player.isAttacked = True
@@ -54,28 +73,6 @@ class Monster(GameObject):
             self.x = self.baseX
             self.dx = 0
             player.getsAttacked()
-
-        '''
-        if pygame.sprite.collide_rect(self, player): 
-            player.isAttacked = True
-            player.isBattling = False
-            self.isBattling = False
-            self.x = self.baseX
-            self.y = self.baseY
-            self.dx = 0
-            player.getsAttacked()
-            
-        elif(abs(self.x-player.x) <= screenWidth//5):
-            #Monster.move(self, player)
-            player.isBattling = True
-            self.isBattling = True
-        else:
-            player.isBattling = False
-            self.isBattling = False
-            self.x = self.baseX
-            self.y = self.baseY
-            self.dx = 0
-        '''
 
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         super(Monster, self).update(screenWidth, screenHeight, self.dx, 0)

@@ -25,20 +25,21 @@ def playNote(note):
 -octave = 12 half steps
 '''
 def checkInterval(interval, startingNote, sungNote):
-	if(interval == 2):
-		halfSteps = 2
-	elif(interval <= 4):
-		halfSteps = interval + 1
-	elif(interval == 5):
-		halfsteps = 7
-	elif(interval == 6):
-		halfSteps = 9
-	elif(interval == 7):
-		halfSteps = 11
-	correctNote = (startingNote + halfSteps)%12
-	if(sungNote == correctNote):
-		return True
-	return False
+    halfSteps = 0
+    if(interval == 2):
+        halfSteps = 2
+    elif(interval <= 4):
+        halfSteps = interval + 1
+    elif(interval == 5):
+        halfsteps = 7
+    elif(interval == 6):
+        halfSteps = 9
+    elif(interval == 7):
+        halfSteps = 11
+    correctNote = (startingNote + halfSteps)%12
+    if(sungNote == correctNote):
+        return True
+    return False
 
 
 def hztoNote(hz):
@@ -103,6 +104,8 @@ def record():
     #stream.stop_stream()
     #stream.close()
     #p.terminate()
-    print(hztoNote(pitch))
-    return hztoNote(pitch)
+    sungNote = hztoNote(pitch)
+    if(sungNote != None):
+        print(sungNote)
+    return sungNote
 

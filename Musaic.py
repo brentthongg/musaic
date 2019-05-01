@@ -6,6 +6,12 @@ from GameObject import GameObject
 from Woofgang import Woofgang
 from AllMonsters import *
 import pitchCode 
+import aubio
+import pyaudio
+import numpy as np
+from Platform import Plat
+import levels
+
 
 class Game(PygameGame):
 
@@ -15,23 +21,33 @@ class Game(PygameGame):
 
         Woofgang.init()
         woofgangSprite = Woofgang(startX, startY)
-        self.notePlayed = False
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
 
         #Level.addMonsters(self.monsters)
     def initializeMonsters():
+        Monster.init()
         Snake.init()
 
     def setMonster(self):
         Game.initializeMonsters()
-        testMonster = Snake(600, 600, 10)
+        testMonster = Snake(600, 600, 2)
         self.monsters = pygame.sprite.GroupSingle(testMonster)
-        pass
+
+    def setLevel(self):
+        Plat.init()
+        self.platGroup = pygame.sprite.Group()
+        if(self.level ==1):
+            self.stage = levels.Level(3)
+        for plat in self.stage.Plats:
+            self.platGroup.add(plat)
+
 
     def init(self):
         self.background = pygame.image.load("imgs/backgroundForest.png")
         Game.setWoofgang(self)
         Game.setMonster(self)
+        self.level = 1
+        Game.setLevel(self)
 
     # Keyboard Functions:
     def keyPressed(self, code, mod): pass
@@ -52,26 +68,27 @@ class Game(PygameGame):
 
     def timerFired(self, dt): 
         woof = self.woofgang.sprites()[0]
-        woof.update(self.isKeyPressed, self.width, self.height, dt)
+        woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.monsters.update(woof, self.width, self.height)
         if(woof.isBattling):
             for monster in self.monsters.sprites():
                 if(monster.isBattling):
-                    pitchCode.playNote(monster.startingNote)
-                    print(monster.startingNote)
-                    #woof.update(self.isKeyPressed, self.width, self.height, dt)
-                    #self.monsters.update(woof, self.width, self.height)
+                    if not monster.notePlayed:
+                        pitchCode.playNote(monster.startingNote)
+                        monster.notePlayed = True
                     sungNote = pitchCode.record()
-                    print(sungNote)
-                    #sungNote = 1
+                    print(monster.startingNote, sungNote)
                     if(monster.checkInterval(sungNote)):
                         monster.kill()
                         break
-    # View:
-
+                        
     def redrawAll(self, screen):
         screen.blit(self.background, (0, 0))
+        for monster in self.monsters:
+            if(monster.isBattling):
+                screen.blit(monster.notePic, (monster.x-20, monster.y-100))
         self.woofgang.draw(screen)
         self.monsters.draw(screen)
+        self.platGroup.draw(screen)
 
 Game(1024, 800).run()
