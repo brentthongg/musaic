@@ -67,7 +67,3 @@ class mainMenu(PygameGame):
         	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,460),(60,495),(136,460),(136,495)],3)
         	pygame.quit()
 
-
-
-
-mainMenu(600, 600).run()
