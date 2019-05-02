@@ -25,6 +25,7 @@ class Game(PygameGame):
     def initImages():
         Game.emptyBone = pygame.image.load("imgs/emptyBone.png")
         Game.filledBone = pygame.image.load("imgs/filledBone.png")
+        Game.emptyNote = pygame.image.load("imgs/emptyNote.png")
 
 
     def setWoofgang(self):
@@ -89,6 +90,7 @@ class Game(PygameGame):
         self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
         self.worldShift = 0
         self.timer = 0
+        self.sungNote = None
 
     def moveWorld(self, shiftX):
 
@@ -141,25 +143,27 @@ class Game(PygameGame):
     # Timer Fired:
 
     def timerFired(self, dt): 
+        self.sungNote = None
         self.timer += 1
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.checkWoofMove()
         if self.timer % 2 == 0:
             self.monsterGroup.update(woof, self.width, self.height, dt)
+        if(woof.isRecording):
+            self.sungNote = pitchCode.record()
+            print(self.sungNote)
         for monster in self.monsterGroup:
             if(monster.isBattling):
                 if not monster.notePlayed:
                     pitchCode.playNote(self.allNotes, monster.startingNote)
                     monster.notePlayed = True
-                sungNote = pitchCode.record()
-                print(monster.startingNote, sungNote)
-                if(monster.checkInterval(sungNote)):
+                if(monster.checkInterval(self.sungNote)):
                     monster.health -= 10
                     if monster.health <= 0:
                         monster.kill()
                         #if random.randint(1, 100) < 35:
-                        self.bone.add(Bone(monster.x, monster.y+50))
+                        self.bone.add(Bone(monster.x, monster.y+10))
                     break
         if woof.health <= 0:
             self.init(self.level)
@@ -173,6 +177,11 @@ class Game(PygameGame):
 
     @staticmethod
     def inGameRedrawAll(self, screen):
+        woof = self.woofgang.sprites()[0]
+        if woof.isRecording:
+            if(self.sungNote == None):
+                screen.blit(self.emptyNote, (300, 300))
+
         screen.blit(self.background, (0, 0))
         for monster in self.monsterGroup:
             Game.drawHealth(monster, screen)

@@ -58,6 +58,7 @@ class Woofgang(GameObject):
         self.currPlat = None
         self.numBones = 0
         self.currBone = 0
+        self.isRecording = False
         
     def getsAttacked(self):
         self.health -= 20
@@ -146,6 +147,12 @@ class Woofgang(GameObject):
             Woofgang.frameNumber += 1
             self.dy += self.gravity
         else: self.dy = 0
+        
+        if keysDown(pygame.K_r):
+            self.isRecording = True
+
+        elif not keysDown(pygame.K_r):
+            self.isRecording = False
 
 
         if not self.isRunning and not self.isJumping:
