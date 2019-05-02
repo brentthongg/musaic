@@ -15,10 +15,15 @@ from levels import *
 
 class Game(PygameGame):
 
+    def initializeNotes(self):
+        self.allNotes = []
+        for note in ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]:
+            self.allNotes.append(pygame.mixer.Sound("monsterNotes/" + note + ".wav"))
+
+    @staticmethod
     def initImages():
         Game.emptyBone = pygame.image.load("imgs/emptyBone.png")
         Game.filledBone = pygame.image.load("imgs/filledBone.png")
-
 
 
     def setWoofgang(self):
@@ -30,6 +35,7 @@ class Game(PygameGame):
         self.woofgang = pygame.sprite.GroupSingle(woofgangSprite)
 
         #Level.addMonsters(self.monsters)
+    @staticmethod
     def initializeMonsters():
         Monster.init()
         Snake.init()
@@ -56,9 +62,9 @@ class Game(PygameGame):
                     p = Platform.Platform(row, col, self.width, self.height, self.numRows, self.numCols)
                     self.platGroup.add(p)
 
-
     def init(self):
         self.numRows, self.numCols = 12, 64
+        self.initializeNotes()
         self.background = pygame.image.load("imgs/backgroundForest.png")
         #self.boneImage =  pygame.image.load("imgs/bone.png")
         Game.setWoofgang(self)
@@ -121,22 +127,22 @@ class Game(PygameGame):
     # Timer Fired:
 
     def timerFired(self, dt): 
+        print("here")
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.checkWoofMove()
         self.monsters.update(woof, self.width, self.height)
-        if(woof.isBattling):
-            for monster in self.monsters.sprites():
-                if(monster.isBattling):
-                    if not monster.notePlayed:
-                        pitchCode.playNote(monster.startingNote)
-                        monster.notePlayed = True
-                    sungNote = pitchCode.record()
-                    print(monster.startingNote, sungNote)
-                    if(monster.checkInterval(sungNote)):
-                        monster.kill()
-                        self.bone.add(Bone(monster.x, monster.y+50))
-                        break
+        for monster in self.monsters.sprites():
+            if(monster.isBattling):
+                if not monster.notePlayed:
+                    pitchCode.playNote(self.allNotes, monster.startingNote)
+                    monster.notePlayed = True
+                sungNote = pitchCode.record()
+                print(monster.startingNote, sungNote)
+                if(monster.checkInterval(sungNote)):
+                    monster.kill()
+                    self.bone.add(Bone(monster.x, monster.y+50))
+                    break
                         
     def redrawAll(self, screen):
         Game.inGameRedrawAll(self, screen)
@@ -144,8 +150,6 @@ class Game(PygameGame):
     @staticmethod
     def inGameRedrawAll(self, screen):
         screen.blit(self.background, (0, 0))
-        screen.blit(self.background, (1024, 0))
-        screen.blit(self.background, (2048, 0))
         for monster in self.monsters:
             if(monster.isBattling):
                 screen.blit(monster.notePic, (monster.x-20, monster.y-100))

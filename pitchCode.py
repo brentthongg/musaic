@@ -1,17 +1,16 @@
-import vlc
+import pygame
+from pygame.locals import *
 import pyaudio
 import sys
 import aubio
 import numpy as np
 import math
 
-def playNote(note):
-	noteKey = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-	noteName = noteKey[note]
-	song = "monsterNotes/" + noteName + ".aiff"
-	p = vlc.MediaPlayer(song)
-	p.play()
-    
+def playNote(allNotes, note):
+    print("Here")
+    song = allNotes[note]
+    song.play()
+    # play song
 
 #all parameters should be indicies into the noteList
 #noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]

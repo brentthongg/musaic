@@ -48,6 +48,7 @@ class PygameGame(object):
 
     def run(self):
         pygame.init()
+        pygame.mixer.init()
         clock = pygame.time.Clock()
         screen = pygame.display.set_mode((self.width, self.height))
         # set the title of the window
