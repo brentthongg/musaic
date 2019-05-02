@@ -1,12 +1,11 @@
 import pygame
-from starter import PygameGame
 from GameObject import GameObject
 
-class mainMenu(PygameGame):
+class mainMenu():
     def mainMenu_init(self):
-        self.background = pygame.image.load("imgs/mainMenuBG.png")
+        self.mmbg = pygame.image.load("imgs/mainMenuBG.png")
         pygame.mixer.init()
-        self.music = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
+        self.mmmusic = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
         pygame.mixer.music.play(100,0)
         #dimensions of UI buttons
         self.startDims = (60,145,327,356) #(0:x1, 1:x2, 2:y1, 3:y2)
@@ -46,6 +45,8 @@ class mainMenu(PygameGame):
     		self.quitDims[2] <= thisY <= self.quitDims[3]):
     		self.quitPressed = True
     	else: pass
+    def getStartPressed(self):
+        return self.startPressed
 
     def mainMenu_mouseReleased(self, x, y): pass
 
@@ -55,14 +56,14 @@ class mainMenu(PygameGame):
 
     # View:
     def mainMenu_redrawAll(self,screen):
-        screen.blit(self.background,(0,0))
-        self.background = pygame.transform.scale(self.background, (600,600)).convert_alpha()
+        screen.blit(self.mmbg,(0,0))
+        self.mmbg = pygame.transform.scale(self.mmbg, (600,600)).convert_alpha()
         if (self.startPressed):
-        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,327),(60,356),(145,356),(145,327)],3)
+        	pygame.draw.lines(self.mmbg,(255, 245, 228),True,[(60,327),(60,356),(145,356),(145,327)],3)
         if (self.configPressed):
-        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,407),(60,375),(290,375),(290,407)],3)
+        	pygame.draw.lines(self.mmbg,(255, 245, 228),True,[(60,407),(60,375),(290,375),(290,407)],3)
         if (self.infoPressed):
-        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,447),(60,418),(130,418),(130,447)],3)
+        	pygame.draw.lines(self.mmbg,(255, 245, 228),True,[(60,447),(60,418),(130,418),(130,447)],3)
         if (self.quitPressed):
-        	pygame.draw.lines(self.background,(255, 245, 228),True,[(60,460),(60,495),(136,460),(136,495)],3)
+        	pygame.draw.lines(self.mmbg,(255, 245, 228),True,[(60,460),(60,495),(136,460),(136,495)],3)
         	pygame.quit()

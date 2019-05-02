@@ -12,9 +12,12 @@ import numpy as np
 from Platform import Platform
 from levels import *
 import random
+from levelScreen import *
+from story import *
+from mainMenu import *
 
 
-class Game(PygameGame):
+class Game(PygameGame,mainMenu,levelScreen,story):
 
     def initializeNotes(self):
         self.allNotes = []
@@ -76,6 +79,13 @@ class Game(PygameGame):
         Game.initImages()
         self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
         self.worldShift = 0
+        self.nav = ["mainMenu","story","inGame"]
+        self.navCurr = 0
+        self.story = story()
+        story.story_init(self)
+        self.mainMenu = mainMenu()
+        mainMenu.mainMenu_init(self)
+
 
     def moveWorld(self, shiftX):
 
@@ -111,13 +121,22 @@ class Game(PygameGame):
             woof.x = 500
 
     # Keyboard Functions:
-    def keyPressed(self, code, mod): pass
+    def keyPressed(self, code, mod): 
+    	currScreen = self.nav[self.navCurr]
+    	if (currScreen == "story"): 
+            story.story_keyPressed(self,code,mod)
+            if (story.story_finished(self)): 
+                self.navCurr+=1
 
     def keyReleased(self, code, mod): pass
 
     # Mouse Functions:
 
-    def mousePressed(self, x, y): pass
+    def mousePressed(self, x, y):
+        currScreen = self.nav[self.navCurr]
+        if (currScreen == "mainMenu"): 
+            mainMenu.mainMenu_mousePressed(self,x,y)
+            if (mainMenu.getStartPressed): self.navCurr+=1
 
     def mouseReleased(self, x, y): pass
 
@@ -128,48 +147,57 @@ class Game(PygameGame):
     # Timer Fired:
 
     def timerFired(self, dt):
-        woof = self.woofgang.sprites()[0]
-        woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
-        self.checkWoofMove()
-        self.monsters.update(woof, self.width, self.height, dt)
-        for monster in self.monsters.sprites():
-            if(monster.isBattling):
-                if not monster.notePlayed:
-                    pitchCode.playNote(self.allNotes, monster.startingNote)
-                    monster.notePlayed = True
-                sungNote = pitchCode.record()
-                print(monster.startingNote, sungNote)
-                if(monster.checkInterval(sungNote)):
-                    monster.health -= 10
-                    if monster.health <= 0:
-                        monster.kill()
-                        if random.randint(1, 100) < 35:
-                            self.bone.add(Bone(monster.x, monster.y+50))
-                    break
-        if woof.health <= 0:
-            self.init()
-                        
+        currScreen = self.nav[self.navCurr]
+        if (currScreen == "inGame"):
+            woof = self.woofgang.sprites()[0]
+            woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
+            self.checkWoofMove()
+            self.monsters.update(woof, self.width, self.height, dt)
+            for monster in self.monsters.sprites():
+                if(monster.isBattling):
+                    if not monster.notePlayed:
+                        pitchCode.playNote(self.allNotes, monster.startingNote)
+                        monster.notePlayed = True
+                    sungNote = pitchCode.record()
+                    print(monster.startingNote, sungNote)
+                    if(monster.checkInterval(sungNote)):
+                        monster.health -= 10
+                        if monster.health <= 0:
+                            monster.kill()
+                            if random.randint(1, 100) < 35:
+                                self.bone.add(Bone(monster.x, monster.y+50))
+                        break
+            if woof.health <= 0:
+                self.init()
+                            
     def redrawAll(self, screen):
-        Game.inGameRedrawAll(self, screen)
+        currScreen = self.nav[self.navCurr]
+        if (currScreen == "mainMenu"): 
+            mainMenu.mainMenu_redrawAll(self,screen)
+        elif (currScreen == "story"): 
+            story.story_redrawAll(self,screen)
+        else: Game.inGameRedrawAll(self, screen)
 
     @staticmethod
     def inGameRedrawAll(self, screen):
-        screen.blit(self.background, (0, 0))
-        for monster in self.monsters:
-            Game.drawHealth(monster, screen)
-            if(monster.isBattling):
-                screen.blit(monster.notePic, (monster.x-20, monster.y-100))
+        currScreen = self.nav[self.navCurr]
+        if (currScreen == "inGame"):
+            screen.blit(self.background, (0, 0))
+            for monster in self.monsters:
+                Game.drawHealth(monster, screen)
+                if(monster.isBattling):
+                    screen.blit(monster.notePic, (monster.x-20, monster.y-100))
 
-        for i in range(3):
-            tempX = 50 + 50*i
-            screen.blit(self.collectBones[i], (tempX, 50))
+            for i in range(3):
+                tempX = 50 + 50*i
+                screen.blit(self.collectBones[i], (tempX, 50))
 
-        self.bone.draw(screen)
-        self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
-        self.platGroup.draw(screen)
-        self.woofgang.draw(screen)
-        Game.drawHealth(self.woofgang.sprites()[0], screen)
-        self.monsters.draw(screen)
+            self.bone.draw(screen)
+            self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
+            self.platGroup.draw(screen)
+            self.woofgang.draw(screen)
+            Game.drawHealth(self.woofgang.sprites()[0], screen)
+            self.monsters.draw(screen)
 
     @staticmethod
     def drawHealth(obj, screen):

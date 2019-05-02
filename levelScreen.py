@@ -1,13 +1,12 @@
 import pygame
-from starter import PygameGame
 from GameObject import GameObject
 
-class levelScreen(PygameGame):
+class levelScreen():
 	def levelScreen_init(self):
 		self.levelScreenCalled = False
-		self.background = pygame.image.load("lvlImgs/10.png")
+		self.levelbg = pygame.image.load("lvlImgs/10.png")
 		pygame.mixer.init()
-		self.music = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
+		self.levelmusic = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
 		pygame.mixer.music.play(100,0)
 		self.level1Dims = (106,244,185,216) #(0:x1, 1:x2, 2:y1, 3:y2)
 		self.level1Pressed = False
@@ -34,5 +33,5 @@ class levelScreen(PygameGame):
 
 	# View:
 	def levelScreen_redrawAll(self,screen):
-		screen.blit(self.background,(0,0))
-		self.background = pygame.transform.scale(self.background, (600,600)).convert_alpha()
+		screen.blit(self.levelbg,(0,0))
+		self.levelbg = pygame.transform.scale(self.levelbg, (600,600)).convert_alpha()
