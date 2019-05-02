@@ -60,7 +60,7 @@ class Woofgang(GameObject):
         self.currBone = 0
         
     def getsAttacked(self):
-        self.health -= 1
+        self.health -= 20
 
     def collideBones(self, bones, collectedBones, filledBone):
         collided = pygame.sprite.spritecollide(self, bones, False)      
@@ -168,6 +168,9 @@ class Woofgang(GameObject):
         if not self.goingRight:
             self.image = pygame.transform.flip(self.image, True, False)
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+        if self.y > screenHeight + 100: 
+          print(self.y)
+          self.health = 0
         super(Woofgang, self).update(screenWidth, screenHeight, self.dx, self.dy)
 
     def inBlockBounds(self, platform):

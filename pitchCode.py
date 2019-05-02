@@ -7,7 +7,6 @@ import numpy as np
 import math
 
 def playNote(allNotes, note):
-    print("Here")
     song = allNotes[note]
     song.play()
     # play song
