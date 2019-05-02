@@ -153,7 +153,7 @@ class Game(PygameGame):
                     pitchCode.playNote(self.allNotes, monster.startingNote)
                     monster.notePlayed = True
                 sungNote = pitchCode.record()
-                print(monster.startingNote, sungNote)
+                # print(monster.startingNote, sungNote)
                 if(monster.checkInterval(sungNote)):
                     monster.health -= 10
                     if monster.health <= 0:
@@ -185,9 +185,9 @@ class Game(PygameGame):
 
         self.bone.draw(screen)
         self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
-        self.woofgang.draw(screen)
-        self.monsterGroup.draw(screen)
         self.platGroup.draw(screen)
+        self.monsterGroup.draw(screen)
+        self.woofgang.draw(screen)
         Game.drawHealth(self.woofgang.sprites()[0], screen)
 
     @staticmethod
