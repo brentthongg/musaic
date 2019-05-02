@@ -53,12 +53,10 @@ class Monster(GameObject):
         self.dx = 0
 
         if(abs(self.x - player.x) <= screenWidth//4):
-            player.isBattling = True
             self.isBattling = True
             self.move(player, screenWidth, screenHeight)
 
         elif(abs(self.x - player.x) > screenWidth//4):
-            player.isBattling = False
             self.isBattling = False
             self.notePlayed = False
             #self.x = self.baseX
@@ -66,7 +64,6 @@ class Monster(GameObject):
 
         if pygame.sprite.collide_rect(self, player):
             player.isAttacked = True
-            player.isBattling = False
             self.isBattling = False
             #self.x = self.baseX
             self.dx = 0
