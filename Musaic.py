@@ -11,6 +11,7 @@ import pyaudio
 import numpy as np
 from Platform import Platform
 from levels import *
+import random
 
 
 class Game(PygameGame):
@@ -46,7 +47,7 @@ class Game(PygameGame):
     def setMonster(self):
         testMonster1 = Snake(500, 584, 2)
         testMonster2 = Snake(1200, 584, 2)
-        testMonster2 = Snake(1500, 584, 2)
+        testMonster3 = Snake(1500, 584, 2)
         self.monsters = pygame.sprite.Group()
         self.monsters.add(testMonster1)
         self.monsters.add(testMonster2)
@@ -83,6 +84,7 @@ class Game(PygameGame):
         Game.initImages()
         self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
         self.worldShift = 0
+        self.timer = 0
 
     def moveWorld(self, shiftX):
 
@@ -135,10 +137,12 @@ class Game(PygameGame):
     # Timer Fired:
 
     def timerFired(self, dt): 
+        self.timer += 1
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.checkWoofMove()
-        self.monsterGroup.update(woof, self.width, self.height)
+        if self.timer % 2 == 0:
+            self.monsterGroup.update(woof, self.width, self.height, dt)
         for monster in self.monsterGroup:
             if(monster.isBattling):
                 if not monster.notePlayed:
@@ -147,9 +151,14 @@ class Game(PygameGame):
                 sungNote = pitchCode.record()
                 print(monster.startingNote, sungNote)
                 if(monster.checkInterval(sungNote)):
-                    monster.kill()
-                    self.bone.add(Bone(monster.x, monster.y+50))
+                    monster.health -= 10
+                    if monster.health <= 0:
+                        monster.kill()
+                        if random.randint(1, 100) < 35:
+                            self.bone.add(Bone(monster.x, monster.y+50))
                     break
+        if woof.health <= 0:
+            self.init()
                         
     def redrawAll(self, screen):
         Game.inGameRedrawAll(self, screen)
@@ -158,6 +167,7 @@ class Game(PygameGame):
     def inGameRedrawAll(self, screen):
         screen.blit(self.background, (0, 0))
         for monster in self.monsterGroup:
+            Game.drawHealth(monster, screen)
             if(monster.isBattling):
                 screen.blit(monster.notePic, (monster.x-20, monster.y-100))
 
@@ -170,5 +180,18 @@ class Game(PygameGame):
         self.woofgang.draw(screen)
         self.monsterGroup.draw(screen)
         self.platGroup.draw(screen)
+        Game.drawHealth(self.woofgang.sprites()[0], screen)
+
+    @staticmethod
+    def drawHealth(obj, screen):
+        health = obj.health
+        leftX = obj.x
+        rightX = leftX + (health / 2)
+        bottomY = obj.y
+        topY = bottomY - 60
+
+        pygame.draw.rect(screen, (255, 255, 255), (leftX, topY, 100, 10))
+        pygame.draw.rect(screen, (255, 0, 0), (leftX, topY, health, 10))
+
 
 Game(1024, 832).run()

@@ -31,10 +31,13 @@ class Monster(GameObject):
         self.startingNote = startingNote
         self.startingInterval = startingInterval
         self.isBattling = False
-        self.frames = []
+        self.frames = self.idleFrame
+        self.frameNumber = 0
         self.notePic = Monster.notePicList[self.startingNote]
         self.notePlayed = False
-        
+        self.health = 100
+        self.timer = 0
+        self.coolDown = 0
 
     def move(self, player, screenWidth, screenHeight):
         if(self.x < player.x):
@@ -49,7 +52,8 @@ class Monster(GameObject):
             return True
         return False
 
-    def update(self, player, screenWidth, screenHeight):
+    def update(self, player, screenWidth, screenHeight, dt):
+        self.coolDown -= dt
         self.dx = 0
 
         if(abs(self.x - player.x) <= screenWidth//4):
@@ -59,16 +63,16 @@ class Monster(GameObject):
         elif(abs(self.x - player.x) > screenWidth//4):
             self.isBattling = False
             self.notePlayed = False
-            #self.x = self.baseX
             self.dx = 0
 
-        if pygame.sprite.collide_rect(self, player):
+        if pygame.sprite.collide_rect(self, player) and self.coolDown < 0:
             player.isAttacked = True
             self.isBattling = False
-            #self.x = self.baseX
             self.dx = 0
+            self.coolDown = 2000
             player.getsAttacked()
-
+        self.frameNumber += 1
+        self.image = self.frames[self.frameNumber % len(self.frames)]
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         super(Monster, self).update(screenWidth, screenHeight, self.dx, 0)
 
