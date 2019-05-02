@@ -56,7 +56,7 @@ class Woofgang(GameObject):
         self.level = 1
         #self.dy = 0
         self.keysHeld = 0
-        self.gravity = 1
+        self.gravity = .75
         self.dx = 0
         self.dy = 0
         self.onPlat = False

@@ -81,6 +81,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     def init(self, level = 1):
         self.numRows, self.numCols = 12, 64
+        self.helpB = pygame.image.load("help.png")
         self.initializeNotes()
         self.background = pygame.image.load("imgs/backgroundForest.png")
         #self.boneImage =  pygame.image.load("imgs/bone.png")
@@ -98,6 +99,19 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         story.story_init(self)
         self.mainMenu = mainMenu()
         mainMenu.mainMenu_init(self)
+        self.timer = 0
+        self.helpScreenTime = 5000
+        self.sungNote = None
+
+    def gameInit(self, level = 1):
+        Game.setWoofgang(self)
+        #Game.setMonster(self)
+        self.level = level
+        Game.setLevel(self)
+        self.bone = pygame.sprite.Group()
+        Game.initImages()
+        self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
+        self.worldShift = 0
         self.timer = 0
         self.sungNote = None
 
@@ -160,6 +174,9 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     # Timer Fired:
     def timerFired(self, dt): 
+        currScreen = self.nav[self.navCurr]
+        if (currScreen == "inGame"):
+            self.helpScreenTime -= dt
         self.sungNote = None
         self.timer += 1
         woof = self.woofgang.sprites()[0]
@@ -183,11 +200,11 @@ class Game(PygameGame,mainMenu,levelScreen,story):
                         self.bone.add(Bone(monster.x, monster.y+10))
                     break
         if woof.health <= 0:
-            self.init(self.level)
+            self.gameInit(self.level)
 
         if woof.numBones == 3:
             self.level += 1
-            self.init(self.level)
+            self.gameInit(self.level)
                         
     def redrawAll(self, screen):
         currScreen = self.nav[self.navCurr]
@@ -201,13 +218,12 @@ class Game(PygameGame,mainMenu,levelScreen,story):
     def inGameRedrawAll(self, screen):
         currScreen = self.nav[self.navCurr]
         if (currScreen == "inGame"):
-
+            screen.blit(self.background, (0, 0))
             woof = self.woofgang.sprites()[0]
             if woof.isRecording:
-                if(self.sungNote == None):
-                    screen.blit(self.emptyNote, (300, 300))
+                if(self.sungNote != None):
+                    screen.blit(Monster.notePicList[self.sungNote], (woof.x - 20, woof.y - 100))
 
-            screen.blit(self.background, (0, 0))
             for monster in self.monsterGroup:
                 Game.drawHealth(monster, screen)
                 if(monster.isBattling):
@@ -223,6 +239,8 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             self.monsterGroup.draw(screen)
             self.woofgang.draw(screen)
             Game.drawHealth(self.woofgang.sprites()[0], screen)
+            if self.helpScreenTime > 0:
+                screen.blit(self.helpB, (0, 0))
 
     @staticmethod
     def drawHealth(obj, screen):
