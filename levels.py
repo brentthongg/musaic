@@ -24,4 +24,3 @@ class Level(object):
         self.currMap = self.createMap()
         Level.generateFloor(self.currMap)
         self.currMap[9][12:17] = [1, 1, 1, 1, 1]
-        print(self.currMap[-4:])
