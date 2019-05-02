@@ -42,6 +42,7 @@ class Game(PygameGame):
         Snake.init()
         Slime.init()
         Bone.init()
+        Mushroom.init()
 
 
     def setMonster(self):
@@ -57,8 +58,8 @@ class Game(PygameGame):
         Game.initializeMonsters()
         self.platGroup = pygame.sprite.Group()
         self.monsterGroup = pygame.sprite.Group()
-        if(self.level == 1):
-            self.stage = Level(1)
+        self.stage = Level(self.level)
+
         for row in range(len(self.stage.currMap)):
             for col in range(len(self.stage.currMap[row])):
                 if(self.stage.currMap[row][col] == 1): # == 1
@@ -70,15 +71,18 @@ class Game(PygameGame):
                 elif(self.stage.currMap[row][col] == "o"):
                     m = Slime(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 3)
                     self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "m"):
+                    m = Mushroom(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 4)
+                    self.monsterGroup.add(m)
 
-    def init(self):
+    def init(self, level = 1):
         self.numRows, self.numCols = 12, 64
         self.initializeNotes()
         self.background = pygame.image.load("imgs/backgroundForest.png")
         #self.boneImage =  pygame.image.load("imgs/bone.png")
         Game.setWoofgang(self)
         #Game.setMonster(self)
-        self.level = 1
+        self.level = level
         Game.setLevel(self)
         self.bone = pygame.sprite.Group()
         Game.initImages()
@@ -154,11 +158,15 @@ class Game(PygameGame):
                     monster.health -= 10
                     if monster.health <= 0:
                         monster.kill()
-                        if random.randint(1, 100) < 35:
-                            self.bone.add(Bone(monster.x, monster.y+50))
+                        #if random.randint(1, 100) < 35:
+                        self.bone.add(Bone(monster.x, monster.y+50))
                     break
         if woof.health <= 0:
-            self.init()
+            self.init(self.level)
+
+        if woof.numBones == 3:
+            self.level += 1
+            self.init(self.level)
                         
     def redrawAll(self, screen):
         Game.inGameRedrawAll(self, screen)

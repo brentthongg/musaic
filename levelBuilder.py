@@ -19,11 +19,9 @@ def init(data):
     data.cols = 64
     data.boxW = 20
     data.boxH = 20
-    #data.board = createMap(data)
+    data.board = createMap(data)
     data.entry = 1
-    #generateFloor(data.board)
-    data.board = readFile("levels/level1")
-    data.board = readFromString(data.board)
+    generateFloor(data.board)
     #data.board = readFile("levels/level1")
     # load data.xyz as appropriate
     pass
@@ -66,11 +64,13 @@ def mousePressed(event, data):
 def keyPressed(event, data):
     if (event.keysym == "space"):
         print(data.board)
-        writeFile("levels/level1", str(data.board))
+        writeFile("levels/level2", str(data.board))
     if(event.keysym == "s"):
         data.entry = "s"
     if(event.keysym == "o"):
         data.entry = "o"
+    if(event.keysym == "m"):
+        data.entry = "m"
     if(event.keysym == "1"):
         data.entry = 1
     # use event.char and event.keysym
@@ -88,6 +88,8 @@ def redrawAll(canvas, data):
                 color = "red"
             elif(data.board[i][j] == "o"):
                 color = "blue"
+            elif(data.board[i][j] == "m"):
+                color = "yellow"
             else:
                 color = None
             canvas.create_rectangle(j*data.boxW, i*data.boxH, (j+1)*data.boxW, (i+1)*data.boxH, fill = color)

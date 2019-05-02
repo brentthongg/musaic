@@ -10,7 +10,7 @@ class Slime(Monster):
         image = pygame.image.load("assets/slime.png")
         cellWidth, cellHeight = image.get_size()[0]/7, image.get_size()[1]
         Slime.idleFrame = list()
-        for col in range(3):
+        for col in range(7):
             subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
             Slime.idleFrame.append(subImage)
 
@@ -52,4 +52,22 @@ class Snake(Monster):
         startingNote = random.randint(0, 11)
         super(Snake, self).__init__(x, y, startingNote, startingInterval, Snake.idleFrame[0])
 
+
+class Mushroom(Monster):
+
+    @staticmethod
+    def init():
+        image = pygame.image.load("imgs/mush.png")
+        cellWidth, cellHeight = image.get_size()[0]/4, image.get_size()[1]
+        Mushroom.idleFrame = list()
+        for col in range(4):
+            subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
+            Mushroom.idleFrame.append(subImage)
+
+
+    def __init__(self, x, y, startingInterval):
+        self.baseX = x
+        self.baseY = y
+        startingNote = random.randint(0, 11)
+        super(Mushroom, self).__init__(x, y, startingNote, startingInterval, Mushroom.idleFrame[0])
 
