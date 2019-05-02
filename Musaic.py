@@ -92,18 +92,14 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         Game.initImages()
         self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
         self.worldShift = 0
-<<<<<<< HEAD
         self.nav = ["mainMenu","story","inGame"]
         self.navCurr = 0
         self.story = story()
         story.story_init(self)
         self.mainMenu = mainMenu()
         mainMenu.mainMenu_init(self)
-
-=======
         self.timer = 0
         self.sungNote = None
->>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
 
     def moveWorld(self, shiftX):
 
@@ -163,33 +159,6 @@ class Game(PygameGame,mainMenu,levelScreen,story):
     def mouseDrag(self, x, y): pass
 
     # Timer Fired:
-
-<<<<<<< HEAD
-    def timerFired(self, dt):
-        currScreen = self.nav[self.navCurr]
-        if (currScreen == "inGame"):
-            woof = self.woofgang.sprites()[0]
-            woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
-            self.checkWoofMove()
-            self.monsters.update(woof, self.width, self.height, dt)
-            for monster in self.monsters.sprites():
-                if(monster.isBattling):
-                    if not monster.notePlayed:
-                        pitchCode.playNote(self.allNotes, monster.startingNote)
-                        monster.notePlayed = True
-                    sungNote = pitchCode.record()
-                    print(monster.startingNote, sungNote)
-                    if(monster.checkInterval(sungNote)):
-                        monster.health -= 10
-                        if monster.health <= 0:
-                            monster.kill()
-                            if random.randint(1, 100) < 35:
-                                self.bone.add(Bone(monster.x, monster.y+50))
-                        break
-            if woof.health <= 0:
-                self.init()
-                            
-=======
     def timerFired(self, dt): 
         self.sungNote = None
         self.timer += 1
@@ -220,7 +189,6 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             self.level += 1
             self.init(self.level)
                         
->>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
     def redrawAll(self, screen):
         currScreen = self.nav[self.navCurr]
         if (currScreen == "mainMenu"): 
@@ -231,11 +199,16 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     @staticmethod
     def inGameRedrawAll(self, screen):
-<<<<<<< HEAD
         currScreen = self.nav[self.navCurr]
         if (currScreen == "inGame"):
+
+            woof = self.woofgang.sprites()[0]
+            if woof.isRecording:
+                if(self.sungNote == None):
+                    screen.blit(self.emptyNote, (300, 300))
+
             screen.blit(self.background, (0, 0))
-            for monster in self.monsters:
+            for monster in self.monsterGroup:
                 Game.drawHealth(monster, screen)
                 if(monster.isBattling):
                     screen.blit(monster.notePic, (monster.x-20, monster.y-100))
@@ -247,32 +220,9 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             self.bone.draw(screen)
             self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
             self.platGroup.draw(screen)
+            self.monsterGroup.draw(screen)
             self.woofgang.draw(screen)
             Game.drawHealth(self.woofgang.sprites()[0], screen)
-            self.monsters.draw(screen)
-=======
-        woof = self.woofgang.sprites()[0]
-        if woof.isRecording:
-            if(self.sungNote == None):
-                screen.blit(self.emptyNote, (300, 300))
-
-        screen.blit(self.background, (0, 0))
-        for monster in self.monsterGroup:
-            Game.drawHealth(monster, screen)
-            if(monster.isBattling):
-                screen.blit(monster.notePic, (monster.x-20, monster.y-100))
-
-        for i in range(3):
-            tempX = 50 + 50*i
-            screen.blit(self.collectBones[i], (tempX, 50))
-
-        self.bone.draw(screen)
-        self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
-        self.platGroup.draw(screen)
-        self.monsterGroup.draw(screen)
-        self.woofgang.draw(screen)
-        Game.drawHealth(self.woofgang.sprites()[0], screen)
->>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
 
     @staticmethod
     def drawHealth(obj, screen):
