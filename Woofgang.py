@@ -13,27 +13,32 @@ class Woofgang(GameObject):
         tempList = sorted(os.listdir("assets/dog_idle"))
         Woofgang.idleFrame = list()
         for file in tempList:
-            Woofgang.idleFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_idle/%s" % file).convert_alpha(), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.idleFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_idle/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_running"))
         Woofgang.runFrame = list()
         for file in tempList:
-            Woofgang.runFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_running/%s" % file).convert_alpha(), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.runFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_running/%s" % file).convert_alpha(), (85, 115)))
         
         tempList = sorted(os.listdir("assets/dog_jumping"))
         Woofgang.jumpFrame = list()
         for file in tempList:
-            Woofgang.jumpFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_jumping/%s" % file).convert_alpha(), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.jumpFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_jumping/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_falling"))
         Woofgang.fallFrame = list()
         for file in tempList:
-            Woofgang.fallFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_falling/%s" % file).convert_alpha(), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.fallFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_falling/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_dying"))
         Woofgang.dieFrame = list()
         for file in tempList:
-            Woofgang.dieFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_dying/%s" % file).convert_alpha(), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.dieFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_dying/%s" % file).convert_alpha(), (153, 115)))
 
         Woofgang.gravity = 2
 
@@ -155,8 +160,10 @@ class Woofgang(GameObject):
                 Woofgang.frameNumber = 0
 
         elif not(self.onGround(blocks)):
+            print('Not on ground')
             Woofgang.frameNumber += 1
             self.dy += self.gravity
+
         else: self.dy = 0
         
         if keysDown(pygame.K_r):
@@ -196,12 +203,13 @@ class Woofgang(GameObject):
         return False
 
     def inBlockBounds(self, platform):
-        return (((self.x + self.w) > platform.x + platform.w) and (self.x < platform.x))
+        #print("right", self.x+self.w, "platform right", platform.x+platform.w, "left", self.x, "plat-left", platform.x)
+        return (((self.x + self.w) > platform.x) and (self.x < platform.x+platform.w))
 
     def onGround(self, blocks):
         for platform in blocks:
             if self.inBlockBounds(platform):
-                if ((self.y + self.h) >= platform.y) and (self.y < platform.y):
+                if (self.y + self.h >= platform.y) and (self.y < platform.y):
                     self.rect.bottom = platform.rect.top
                     return True
         return False

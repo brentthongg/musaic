@@ -158,13 +158,7 @@ class Game(PygameGame):
                 if not monster.notePlayed:
                     pitchCode.playNote(self.allNotes, monster.startingNote)
                     monster.notePlayed = True
-<<<<<<< HEAD
                 if(monster.checkInterval(self.sungNote)):
-=======
-                sungNote = pitchCode.record()
-                # print(monster.startingNote, sungNote)
-                if(monster.checkInterval(sungNote)):
->>>>>>> 50e5167436fc5e091a8c5cb986132f1b0bfba0e7
                     monster.health -= 10
                     if monster.health <= 0:
                         monster.kill()
