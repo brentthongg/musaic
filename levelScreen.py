@@ -5,7 +5,7 @@ from GameObject import GameObject
 class levelScreen(PygameGame):
 	def levelScreen_init(self):
 		self.levelScreenCalled = False
-		self.background = pygame.image.load("lvlImgs/1.png")
+		self.background = pygame.image.load("lvlImgs/10.png")
 		pygame.mixer.init()
 		self.music = pygame.mixer.music.load("music/Whimsical-Popsicle.mp3")
 		pygame.mixer.music.play(100,0)
