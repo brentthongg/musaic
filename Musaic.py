@@ -9,20 +9,9 @@ import pitchCode
 import aubio
 import pyaudio
 import numpy as np
-<<<<<<< HEAD
-from Platform import Plat
-import levels
-import levelScreen
-import mainMenu
-import story
-=======
 from Platform import Platform
 from levels import *
-<<<<<<< HEAD
 import random
-=======
->>>>>>> 2f29b88dbf649495b887f8eb12026041737ab2d8
->>>>>>> b92a086bc8e4292518654a6e155d6db19961964d
 
 
 class Game(PygameGame):
@@ -148,7 +137,7 @@ class Game(PygameGame):
                 if not monster.notePlayed:
                     pitchCode.playNote(self.allNotes, monster.startingNote)
                     monster.notePlayed = True
-                sungNote = pitchCode.record(self.p, self.stream)
+                sungNote = pitchCode.record()
                 print(monster.startingNote, sungNote)
                 if(monster.checkInterval(sungNote)):
                     monster.health -= 10
@@ -158,7 +147,6 @@ class Game(PygameGame):
                             self.bone.add(Bone(monster.x, monster.y+50))
                     break
         if woof.health <= 0:
-            print("here")
             self.init()
                         
     def redrawAll(self, screen):
