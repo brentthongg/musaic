@@ -14,4 +14,5 @@ class Platform(GameObject):
         x = ((screenWidth * 4) / numCols) * c
         y = (screenHeight / numRows) * r
         super(Platform, self).__init__(x, y, Platform.platImage)
+        self.dx = 0
 
