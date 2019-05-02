@@ -7,19 +7,19 @@ class Slime(Monster):
 
     @staticmethod
     def init():
-        image = pygame.image.load("assets/snake_idle.png")
-        cellWidth, cellHeight = 41, 39
-        Snake.idleFrame = list()
+        image = pygame.image.load("assets/slime.png")
+        cellWidth, cellHeight = image.get_size()[0]/7, image.get_size()[1]
+        Slime.idleFrame = list()
         for col in range(3):
             subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
-            Snake.idleFrame.append(subImage)
+            Slime.idleFrame.append(subImage)
 
         image = pygame.image.load("assets/snake_walk.png")
         cellWidth, cellHeight = 34, 38
-        Snake.walkFrame = list()
+        Slime.walkFrame = list()
         for col in range(3):
             subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
-            Snake.walkFrame.append(subImage)
+            Slime.walkFrame.append(subImage)
 
     def __init__(self, x, y, startingInterval):
         self.baseX = x

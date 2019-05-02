@@ -148,7 +148,6 @@ class Woofgang(GameObject):
         else: self.dy = 0
 
 
-
         if not self.isRunning and not self.isJumping:
             Woofgang.frameNumber += 1
 
@@ -159,16 +158,23 @@ class Woofgang(GameObject):
                 dx = -screenWidth//4
             Woofgang.frameNumber = 0
 
-
         self.dx = dx
 
-        #self.collidePlat(blocks)
 
         self.image = self.frames[Woofgang.frameNumber]
         if not self.goingRight:
             self.image = pygame.transform.flip(self.image, True, False)
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
         super(Woofgang, self).update(screenWidth, screenHeight, self.dx, self.dy)
+
+    def nextToBlock(self, blocks, dx):
+        tempX = self.x+dx
+        tempy = self.y+self.dy
+        for block in blocks:
+            if (tempX > block.x) and (tempX + self.w < block.x + block.w):
+                if(block.y > tempY) and (block.y + block.h < tempY+ self.h):
+                    return True
+        return False
 
     def inBlockBounds(self, platform):
         return (((self.x + self.w) > platform.x + platform.w) and (self.x < platform.x))

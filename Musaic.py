@@ -39,11 +39,11 @@ class Game(PygameGame):
     def initializeMonsters():
         Monster.init()
         Snake.init()
+        Slime.init()
         Bone.init()
 
 
     def setMonster(self):
-        Game.initializeMonsters()
         testMonster1 = Snake(500, 584, 2)
         testMonster2 = Snake(1200, 584, 2)
         testMonster2 = Snake(1500, 584, 2)
@@ -53,14 +53,22 @@ class Game(PygameGame):
 
     def setLevel(self):
         Platform.Platform.init()
+        Game.initializeMonsters()
         self.platGroup = pygame.sprite.Group()
+        self.monsterGroup = pygame.sprite.Group()
         if(self.level == 1):
             self.stage = Level(1)
         for row in range(len(self.stage.currMap)):
             for col in range(len(self.stage.currMap[row])):
-                if self.stage.currMap[row][col]: # == 1
+                if(self.stage.currMap[row][col] == 1): # == 1
                     p = Platform.Platform(row, col, self.width, self.height, self.numRows, self.numCols)
                     self.platGroup.add(p)
+                elif(self.stage.currMap[row][col] == "s"):
+                    m = Snake(col*(self.width*4)/self.numCols, row*(self.height/self.numRows),2)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "o"):
+                    m = Slime(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 3)
+                    self.monsterGroup.add(m)
 
     def init(self):
         self.numRows, self.numCols = 12, 64
@@ -68,7 +76,7 @@ class Game(PygameGame):
         self.background = pygame.image.load("imgs/backgroundForest.png")
         #self.boneImage =  pygame.image.load("imgs/bone.png")
         Game.setWoofgang(self)
-        Game.setMonster(self)
+        #Game.setMonster(self)
         self.level = 1
         Game.setLevel(self)
         self.bone = pygame.sprite.Group()
@@ -80,7 +88,7 @@ class Game(PygameGame):
 
         self.worldShift += shiftX
 
-        for monster in self.monsters:
+        for monster in self.monsterGroup:
             monster.x += shiftX
             monster.rect = pygame.Rect(monster.x, monster.y, monster.w, monster.h)
 
@@ -127,12 +135,11 @@ class Game(PygameGame):
     # Timer Fired:
 
     def timerFired(self, dt): 
-        print("here")
         woof = self.woofgang.sprites()[0]
         woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.checkWoofMove()
-        self.monsters.update(woof, self.width, self.height)
-        for monster in self.monsters.sprites():
+        self.monsterGroup.update(woof, self.width, self.height)
+        for monster in self.monsterGroup:
             if(monster.isBattling):
                 if not monster.notePlayed:
                     pitchCode.playNote(self.allNotes, monster.startingNote)
@@ -150,7 +157,7 @@ class Game(PygameGame):
     @staticmethod
     def inGameRedrawAll(self, screen):
         screen.blit(self.background, (0, 0))
-        for monster in self.monsters:
+        for monster in self.monsterGroup:
             if(monster.isBattling):
                 screen.blit(monster.notePic, (monster.x-20, monster.y-100))
 
@@ -161,7 +168,7 @@ class Game(PygameGame):
         self.bone.draw(screen)
         self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
         self.woofgang.draw(screen)
-        self.monsters.draw(screen)
+        self.monsterGroup.draw(screen)
         self.platGroup.draw(screen)
 
 Game(1024, 832).run()
