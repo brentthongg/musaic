@@ -28,6 +28,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
     def initImages():
         Game.emptyBone = pygame.image.load("imgs/emptyBone.png")
         Game.filledBone = pygame.image.load("imgs/filledBone.png")
+        Game.emptyNote = pygame.image.load("imgs/emptyNote.png")
 
 
     def setWoofgang(self):
@@ -43,11 +44,12 @@ class Game(PygameGame,mainMenu,levelScreen,story):
     def initializeMonsters():
         Monster.init()
         Snake.init()
+        Slime.init()
         Bone.init()
+        Mushroom.init()
 
 
     def setMonster(self):
-        Game.initializeMonsters()
         testMonster1 = Snake(500, 584, 2)
         testMonster2 = Snake(1200, 584, 2)
         testMonster3 = Snake(1500, 584, 2)
@@ -57,28 +59,40 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     def setLevel(self):
         Platform.Platform.init()
+        Game.initializeMonsters()
         self.platGroup = pygame.sprite.Group()
-        if(self.level == 1):
-            self.stage = Level(1)
+        self.monsterGroup = pygame.sprite.Group()
+        self.stage = Level(self.level)
+
         for row in range(len(self.stage.currMap)):
             for col in range(len(self.stage.currMap[row])):
-                if self.stage.currMap[row][col]: # == 1
+                if(self.stage.currMap[row][col] == 1): # == 1
                     p = Platform.Platform(row, col, self.width, self.height, self.numRows, self.numCols)
                     self.platGroup.add(p)
+                elif(self.stage.currMap[row][col] == "s"):
+                    m = Snake(col*(self.width*4)/self.numCols, row*(self.height/self.numRows),2)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "o"):
+                    m = Slime(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 3)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "m"):
+                    m = Mushroom(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 4)
+                    self.monsterGroup.add(m)
 
-    def init(self):
+    def init(self, level = 1):
         self.numRows, self.numCols = 12, 64
         self.initializeNotes()
         self.background = pygame.image.load("imgs/backgroundForest.png")
         #self.boneImage =  pygame.image.load("imgs/bone.png")
         Game.setWoofgang(self)
-        Game.setMonster(self)
-        self.level = 1
+        #Game.setMonster(self)
+        self.level = level
         Game.setLevel(self)
         self.bone = pygame.sprite.Group()
         Game.initImages()
         self.collectBones = [self.emptyBone,self.emptyBone,self.emptyBone]
         self.worldShift = 0
+<<<<<<< HEAD
         self.nav = ["mainMenu","story","inGame"]
         self.navCurr = 0
         self.story = story()
@@ -86,12 +100,16 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         self.mainMenu = mainMenu()
         mainMenu.mainMenu_init(self)
 
+=======
+        self.timer = 0
+        self.sungNote = None
+>>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
 
     def moveWorld(self, shiftX):
 
         self.worldShift += shiftX
 
-        for monster in self.monsters:
+        for monster in self.monsterGroup:
             monster.x += shiftX
             monster.rect = pygame.Rect(monster.x, monster.y, monster.w, monster.h)
 
@@ -146,6 +164,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     # Timer Fired:
 
+<<<<<<< HEAD
     def timerFired(self, dt):
         currScreen = self.nav[self.navCurr]
         if (currScreen == "inGame"):
@@ -170,6 +189,38 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             if woof.health <= 0:
                 self.init()
                             
+=======
+    def timerFired(self, dt): 
+        self.sungNote = None
+        self.timer += 1
+        woof = self.woofgang.sprites()[0]
+        woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
+        self.checkWoofMove()
+        if self.timer % 2 == 0:
+            self.monsterGroup.update(woof, self.width, self.height, dt)
+        if(woof.isRecording):
+            self.sungNote = pitchCode.record()
+            print(self.sungNote)
+        for monster in self.monsterGroup:
+            if(monster.isBattling):
+                if not monster.notePlayed:
+                    pitchCode.playNote(self.allNotes, monster.startingNote)
+                    monster.notePlayed = True
+                if(monster.checkInterval(self.sungNote)):
+                    monster.health -= 10
+                    if monster.health <= 0:
+                        monster.kill()
+                        #if random.randint(1, 100) < 35:
+                        self.bone.add(Bone(monster.x, monster.y+10))
+                    break
+        if woof.health <= 0:
+            self.init(self.level)
+
+        if woof.numBones == 3:
+            self.level += 1
+            self.init(self.level)
+                        
+>>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
     def redrawAll(self, screen):
         currScreen = self.nav[self.navCurr]
         if (currScreen == "mainMenu"): 
@@ -180,6 +231,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
 
     @staticmethod
     def inGameRedrawAll(self, screen):
+<<<<<<< HEAD
         currScreen = self.nav[self.navCurr]
         if (currScreen == "inGame"):
             screen.blit(self.background, (0, 0))
@@ -198,6 +250,29 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             self.woofgang.draw(screen)
             Game.drawHealth(self.woofgang.sprites()[0], screen)
             self.monsters.draw(screen)
+=======
+        woof = self.woofgang.sprites()[0]
+        if woof.isRecording:
+            if(self.sungNote == None):
+                screen.blit(self.emptyNote, (300, 300))
+
+        screen.blit(self.background, (0, 0))
+        for monster in self.monsterGroup:
+            Game.drawHealth(monster, screen)
+            if(monster.isBattling):
+                screen.blit(monster.notePic, (monster.x-20, monster.y-100))
+
+        for i in range(3):
+            tempX = 50 + 50*i
+            screen.blit(self.collectBones[i], (tempX, 50))
+
+        self.bone.draw(screen)
+        self.woofgang.sprites()[0].collideBones(self.bone, self.collectBones,self.filledBone)
+        self.platGroup.draw(screen)
+        self.monsterGroup.draw(screen)
+        self.woofgang.draw(screen)
+        Game.drawHealth(self.woofgang.sprites()[0], screen)
+>>>>>>> a45c98e9bb06b1800c34afbd57396a46461b5ceb
 
     @staticmethod
     def drawHealth(obj, screen):

@@ -13,27 +13,32 @@ class Woofgang(GameObject):
         tempList = sorted(os.listdir("assets/dog_idle"))
         Woofgang.idleFrame = list()
         for file in tempList:
-            Woofgang.idleFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_idle/%s" % file), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.idleFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_idle/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_running"))
         Woofgang.runFrame = list()
         for file in tempList:
-            Woofgang.runFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_running/%s" % file), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.runFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_running/%s" % file).convert_alpha(), (85, 115)))
         
         tempList = sorted(os.listdir("assets/dog_jumping"))
         Woofgang.jumpFrame = list()
         for file in tempList:
-            Woofgang.jumpFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_jumping/%s" % file), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.jumpFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_jumping/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_falling"))
         Woofgang.fallFrame = list()
         for file in tempList:
-            Woofgang.fallFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_falling/%s" % file), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.fallFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_falling/%s" % file).convert_alpha(), (85, 115)))
 
         tempList = sorted(os.listdir("assets/dog_dying"))
         Woofgang.dieFrame = list()
         for file in tempList:
-            Woofgang.dieFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_dying/%s" % file), (135, 120)))
+            if(file != ".DS_Store"):
+                Woofgang.dieFrame.append(pygame.transform.scale(pygame.image.load("assets/dog_dying/%s" % file).convert_alpha(), (153, 115)))
 
         Woofgang.gravity = 2
 
@@ -51,13 +56,14 @@ class Woofgang(GameObject):
         self.level = 1
         #self.dy = 0
         self.keysHeld = 0
-        self.gravity = 1.5
+        self.gravity = 1
         self.dx = 0
         self.dy = 0
         self.onPlat = False
         self.currPlat = None
         self.numBones = 0
         self.currBone = 0
+        self.isRecording = False
         
     def getsAttacked(self):
         self.health -= 20
@@ -88,10 +94,22 @@ class Woofgang(GameObject):
             self.isJumping = True
             self.onPlat = False
     '''
-            
+    """  
+    def processBlockCollision(self, blocks):
+        self.rect.x += self.dx
+        hitList = pygame.sprite.spritecollide(self, blocks, False)
+
+        for block in hitList:
+            if self.dx > 0:
+                self.rect.right = block.rect.left
+                self.dx = 0
+            elif self.dx < 0:
+                self.rect.left = block.rect.right
+                self.dx = 0
+    """
 
     def update(self, keysDown, screenWidth, screenHeight, delta, blocks):
-        dx = 0
+        # self.dx = 0
 
         if (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and not self.isRunning:
             self.frames = Woofgang.runFrame
@@ -104,9 +122,6 @@ class Woofgang(GameObject):
             self.isAttacked = False
             self.isDying = True
 
-            #for testing purposes
-            #self.health += 100
-
         elif not (keysDown(pygame.K_RIGHT) or keysDown(pygame.K_LEFT)) and self.isRunning:
             self.frames = Woofgang.idleFrame
             Woofgang.frameNumber = 0
@@ -114,13 +129,15 @@ class Woofgang(GameObject):
 
         if keysDown(pygame.K_RIGHT) and self.isRunning:
             Woofgang.frameNumber += 1
-            dx = 15
+            self.dx = 15
             self.goingRight = True
+            # self.processBlockCollision(blocks)
 
         elif keysDown(pygame.K_LEFT) and self.isRunning:
             Woofgang.frameNumber += 1
-            dx = -15
+            self.dx = -15
             self.goingRight = False
+            # self.processBlockCollision(blocks)
 
         if keysDown(pygame.K_SPACE) and not self.isJumping:
             self.isJumping = True
@@ -143,10 +160,17 @@ class Woofgang(GameObject):
                 Woofgang.frameNumber = 0
 
         elif not(self.onGround(blocks)):
+            print('Not on ground')
             Woofgang.frameNumber += 1
             self.dy += self.gravity
-        else: self.dy = 0
 
+        else: self.dy = 0
+        
+        if keysDown(pygame.K_r):
+            self.isRecording = True
+
+        elif not keysDown(pygame.K_r):
+            self.isRecording = False
 
 
         if not self.isRunning and not self.isJumping:
@@ -156,30 +180,37 @@ class Woofgang(GameObject):
             if(self.isDying):
                 self.isDying = False
                 self.frames = Woofgang.idleFrame
-                dx = -screenWidth//4
+                self.dx = -screenWidth//4
             Woofgang.frameNumber = 0
-
-
-        self.dx = dx
-
-        #self.collidePlat(blocks)
 
         self.image = self.frames[Woofgang.frameNumber]
         if not self.goingRight:
             self.image = pygame.transform.flip(self.image, True, False)
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+        # self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
         if self.y > screenHeight + 100: 
-          print(self.y)
-          self.health = 0
-        super(Woofgang, self).update(screenWidth, screenHeight, self.dx, self.dy)
+            print(self.y)
+            self.health = 0
+        # print(self.nextToBlock(blocks, self.dx))
+        super(Woofgang, self).update(screenWidth, screenHeight, self.dx, self.dy, blocks)
+
+    def nextToBlock(self, blocks, dx):
+        tempX = self.x+dx
+        tempy = self.y+self.dy
+        for block in blocks:
+            if (tempX > block.x) and (tempX + self.w < block.x + block.w):
+                if(block.y > tempY) and (block.y + block.h < tempY+ self.h):
+                    return True
+        return False
 
     def inBlockBounds(self, platform):
-        return (((self.x + self.w) > platform.x + platform.w) and (self.x < platform.x))
+        #print("right", self.x+self.w, "platform right", platform.x+platform.w, "left", self.x, "plat-left", platform.x)
+        return (((self.x + self.w) > platform.x) and (self.x < platform.x+platform.w))
 
     def onGround(self, blocks):
         for platform in blocks:
             if self.inBlockBounds(platform):
-                if ((self.y + self.h) >= platform.y) and (self.y < platform.y):
+                if (self.y + self.h >= platform.y) and (self.y < platform.y):
+                    self.rect.bottom = platform.rect.top
                     return True
         return False
 

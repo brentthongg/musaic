@@ -103,7 +103,7 @@ def record():
     #stream.close()
     #p.terminate()
     sungNote = hztoNote(pitch)
-    if(sungNote != None):
-        print(sungNote)
+    # if(sungNote != None):
+        # print(sungNote)
     return sungNote
 
