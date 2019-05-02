@@ -31,7 +31,8 @@ class Monster(GameObject):
         self.startingNote = startingNote
         self.startingInterval = startingInterval
         self.isBattling = False
-        self.frames = []
+        self.frames = self.idleFrame
+        self.frameNumber = 0
         self.notePic = Monster.notePicList[self.startingNote]
         self.notePlayed = False
         self.health = 100
@@ -70,7 +71,8 @@ class Monster(GameObject):
             self.dx = 0
             self.coolDown = 2000
             player.getsAttacked()
-
+        self.frameNumber += 1
+        self.image = self.frames[self.frameNumber % len(self.frames)]
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         super(Monster, self).update(screenWidth, screenHeight, self.dx, 0)
 
