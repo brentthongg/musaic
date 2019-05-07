@@ -71,3 +71,59 @@ class Mushroom(Monster):
         startingNote = random.randint(0, 11)
         super(Mushroom, self).__init__(x, y, startingNote, startingInterval, Mushroom.idleFrame[0])
 
+
+class Stump(Monster):
+
+    @staticmethod
+    def init():
+        image = pygame.image.load("imgs/stump.png")
+        cellWidth, cellHeight = image.get_size()[0]/4, image.get_size()[1]
+        Stump.idleFrame = list()
+        for col in range(4):
+            subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
+            Stump.idleFrame.append(subImage)
+
+
+    def __init__(self, x, y, startingInterval):
+        self.baseX = x
+        self.baseY = y
+        startingNote = random.randint(0, 11)
+        super(Stump, self).__init__(x, y, startingNote, startingInterval, Stump.idleFrame[0])
+
+class Bubble(Monster):
+
+    @staticmethod
+    def init():
+        image = pygame.image.load("imgs/bubble.png")
+        cellWidth, cellHeight = image.get_size()[0]/5, image.get_size()[1]
+        Bubble.idleFrame = list()
+        for col in range(5):
+            subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
+            Bubble.idleFrame.append(subImage)
+
+
+    def __init__(self, x, y, startingInterval):
+        self.baseX = x
+        self.baseY = y
+        startingNote = random.randint(0, 11)
+        super(Bubble, self).__init__(x, y, startingNote, startingInterval, Bubble.idleFrame[0])
+
+class Spoopy(Monster):
+
+    @staticmethod
+    def init():
+        image = pygame.image.load("imgs/spoopy.png")
+        cellWidth, cellHeight = image.get_size()[0]/6, image.get_size()[1]
+        Spoopy.idleFrame = list()
+        for col in range(6):
+            subImage = image.subsurface((col * cellWidth, 0, cellWidth, cellHeight))
+            Spoopy.idleFrame.append(subImage)
+
+
+    def __init__(self, x, y, startingInterval):
+        self.baseX = x
+        self.baseY = y
+        startingNote = random.randint(0, 11)
+        super(Spoopy, self).__init__(x, y, startingNote, startingInterval, Spoopy.idleFrame[0])
+
+

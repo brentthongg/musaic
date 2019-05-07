@@ -6,7 +6,7 @@ class Platform(GameObject):
 
     @staticmethod
     def init():
-        Platform.platImage = pygame.transform.scale(pygame.image.load("imgs/plat.png"), (64, 64))
+        Platform.platImage = pygame.transform.scale(pygame.image.load("assets/midTile.png"), (64, 64))
 
 
     def __init__(self, r, c, screenWidth, screenHeight, numRows, numCols):

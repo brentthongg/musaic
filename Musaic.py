@@ -47,6 +47,9 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         Slime.init()
         Bone.init()
         Mushroom.init()
+        Stump.init()
+        Bubble.init()
+        Spoopy.init()
 
 
     def setMonster(self):
@@ -77,6 +80,15 @@ class Game(PygameGame,mainMenu,levelScreen,story):
                     self.monsterGroup.add(m)
                 elif(self.stage.currMap[row][col] == "m"):
                     m = Mushroom(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 4)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "t"):
+                    m = Stump(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 5)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "b"):
+                    m = Bubble(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 6)
+                    self.monsterGroup.add(m)
+                elif(self.stage.currMap[row][col] == "x"):
+                    m = Spoopy(col*(self.width*4)/self.numCols, row*(self.height/self.numRows), 7)
                     self.monsterGroup.add(m)
 
     def init(self, level = 1):
@@ -183,7 +195,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         woof.update(self.isKeyPressed, self.width, self.height, dt, self.platGroup)
         self.checkWoofMove()
         if self.timer % 2 == 0:
-            self.monsterGroup.update(woof, self.width, self.height, dt)
+            self.monsterGroup.update(woof, self.width, self.height, dt, self.platGroup)
         if(woof.isRecording):
             self.sungNote = pitchCode.record()
             print(self.sungNote)
