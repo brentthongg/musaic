@@ -24,8 +24,8 @@ class story():
                 self.currScene += 1
                 if self.currScene in [3,5,6,8]:
                     self.currMusic += 1
-                    pygame.mixer.music.load(self.musicTitles[self.currMusic]+".mp3")
-                    pygame.mixer.music.play(100,0)
+                    #pygame.mixer.music.load(self.musicTitles[self.currMusic]+".mp3")
+                    #pygame.mixer.music.play(100,0)
         if code == pygame.K_DOWN or code == pygame.K_LEFT: 
             if (self.currScene!= 1): 
                 self.currScene -= 1

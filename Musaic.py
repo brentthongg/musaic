@@ -222,12 +222,12 @@ class Game(PygameGame,mainMenu,levelScreen,story):
             woof = self.woofgang.sprites()[0]
             if woof.isRecording:
                 if(self.sungNote != None):
-                    screen.blit(Monster.notePicList[self.sungNote], (woof.x - 20, woof.y - 100))
+                    screen.blit(Monster.notePicList[self.sungNote], (woof.x - woof.w/2, woof.y - 80))
 
             for monster in self.monsterGroup:
                 Game.drawHealth(monster, screen)
                 if(monster.isBattling):
-                    screen.blit(monster.notePic, (monster.x-20, monster.y-100))
+                    screen.blit(monster.notePic, (monster.x-monster.w/2, monster.y-150))
 
             for i in range(3):
                 tempX = 50 + 50*i
@@ -247,7 +247,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
         health = obj.health
         leftX = obj.x
         rightX = leftX + (health / 2)
-        bottomY = obj.y
+        bottomY = obj.y+20
         topY = bottomY - 60
 
         pygame.draw.rect(screen, (255, 255, 255), (leftX, topY, 100, 10))
