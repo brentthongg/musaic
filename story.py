@@ -14,6 +14,7 @@ class story():
         self.musicTitles = ["music/fantasyForestBattle","music/clockMaker","music/crusaders",
         "music/parisLoop","music/8bit"]
         self.storymusic = pygame.mixer.music.load(self.musicTitles[self.currMusic]+".mp3")
+        pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play(100,3)
 
     def story_keyPressed(self, code, mod):

@@ -197,7 +197,7 @@ class Game(PygameGame,mainMenu,levelScreen,story):
                     if monster.health <= 0:
                         monster.kill()
                         #if random.randint(1, 100) < 35:
-                        self.bone.add(Bone(monster.x, monster.y+10))
+                        self.bone.add(Bone(monster.x, monster.y))
                     break
         if woof.health <= 0:
             self.gameInit(self.level)
