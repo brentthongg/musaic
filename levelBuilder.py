@@ -64,13 +64,19 @@ def mousePressed(event, data):
 def keyPressed(event, data):
     if (event.keysym == "space"):
         print(data.board)
-        writeFile("levels/level2", str(data.board))
+        writeFile("levels/level6", str(data.board))
     if(event.keysym == "s"):
         data.entry = "s"
     if(event.keysym == "o"):
         data.entry = "o"
     if(event.keysym == "m"):
         data.entry = "m"
+    if(event.keysym == "t"):
+        data.entry = "t"
+    if(event.keysym == "b"):
+        data.entry = "b"
+    if(event.keysym == "x"):
+        data.entry = "x"
     if(event.keysym == "1"):
         data.entry = 1
     # use event.char and event.keysym
@@ -90,6 +96,12 @@ def redrawAll(canvas, data):
                 color = "blue"
             elif(data.board[i][j] == "m"):
                 color = "yellow"
+            elif(data.board[i][j] == "t"):
+                color = "orange"
+            elif(data.board[i][j] == "b"):
+                color = "purple"
+            elif(data.board[i][j] == "x"):
+                color = "black"
             else:
                 color = None
             canvas.create_rectangle(j*data.boxW, i*data.boxH, (j+1)*data.boxW, (i+1)*data.boxH, fill = color)

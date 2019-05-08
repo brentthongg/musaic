@@ -13,6 +13,12 @@ class Level(object):
             self.currMap = self.readFromString(self.readFile("levels/level2"))
         elif(level == 3):
             self.currMap = self.readFromString(self.readFile("levels/level3"))
+        elif(level == 4):
+            self.currMap = self.readFromString(self.readFile("levels/level4"))
+        elif(level == 5):
+            self.currMap = self.readFromString(self.readFile("levels/level5"))
+        elif(level == 6):
+            self.currMap = self.readFromString(self.readFile("levels/level6"))
 
     def readFile(self, path):
         with open(path, "rt") as f:

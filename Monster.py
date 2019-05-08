@@ -52,7 +52,7 @@ class Monster(GameObject):
             return True
         return False
 
-    def update(self, player, screenWidth, screenHeight, dt):
+    def update(self, player, screenWidth, screenHeight, dt, blocks):
         self.coolDown -= dt
         self.dx = 0
 
@@ -65,6 +65,23 @@ class Monster(GameObject):
             self.notePlayed = False
             self.dx = 0
 
+        hitList = pygame.sprite.spritecollide(self, blocks, False)
+
+        for plat in hitList:
+            isOnTop = onTop(self, plat)
+            if not(isOnTop):
+                if self.dx > 0:
+                    self.rect.right = plat.rect.left
+                    self.dx = 0
+                elif self.dx < 0:
+                    self.rect.left = plat.rect.right
+                    self.dx = 0
+            elif(isOnTop):
+                if(self.rect.left < plat.rect.left) or (self.rect.right > plat.rect.right):
+                    self.dx = 0
+
+
+
         if pygame.sprite.collide_rect(self, player) and self.coolDown < 0:
             player.isAttacked = True
             self.isBattling = False
@@ -74,7 +91,13 @@ class Monster(GameObject):
         self.frameNumber += 1
         self.image = self.frames[self.frameNumber % len(self.frames)]
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
-        super(Monster, self).update(screenWidth, screenHeight, self.dx, 0)
+        super(Monster, self).update(screenWidth, screenHeight, self.dx, 0, blocks)
+
+def onTop(self, block):
+    return self.rect.bottom <= block.rect.top
+
+def onGround(self):
+    return self.rect.bottom == 600
 
 class Bone(GameObject):
 
