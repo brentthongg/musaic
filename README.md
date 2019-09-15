@@ -17,7 +17,7 @@ pip3 install numpy
 Clone the repo to download all the necessary game files:
 ```bash
 git clone https://github.com/brentthongg/musaic
-
+```
 ## Usage
 
 To play the game, simply go into the directory and run: 
